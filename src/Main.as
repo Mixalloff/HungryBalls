@@ -21,13 +21,17 @@ public class Main extends Sprite {
         var newScene: Playfield = new Playfield(stage);
         var newBall: Ball = new Ball(newScene, true, 20, 20, 20);
 
-        for(var i: int = 0; i < 2; i++ ) {
+        for(var i: int = 0; i < 5; i++ ) {
             new Ball(newScene, false);
         }
 
        // workPlace.addEventListener(MouseEvent.CLICK, newBall.tryMove);
         stage.addEventListener(MouseEvent.CLICK, newBall.MoveByClick);
         newBall.addEventListener(Event.ENTER_FRAME, newBall.enterFrame);
+
+
+        stage.addEventListener(MouseEvent.MOUSE_DOWN, newBall.StartMouseDown);
+        stage.addEventListener(MouseEvent.MOUSE_UP, newBall.EndMouseDown);
     }
 }
 }

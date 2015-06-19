@@ -11,6 +11,7 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.globalization.NumberParseResult;
 import flash.text.TextField;
+import flash.utils.getTimer;
 
 // Класс шара
 public class Ball extends Sprite {
@@ -22,6 +23,9 @@ public class Ball extends Sprite {
     private var speed: Number;
     private var angle: Number;
     private var acceleration: Number;
+
+    // Сила воздействия на шар
+    private var power: Number;
 
    // public var textField:TextField = new TextField();
 
@@ -84,7 +88,7 @@ public class Ball extends Sprite {
 
     public function enterFrame(event:Event):void {
         this.speed *= this.acceleration;
-        this.acceleration *= 0.98;
+        this.acceleration *= 1 - this.koefFriction;
         var speedX: Number = speed * Math.cos(this.angle);
         var speedY: Number = speed * Math.sin(this.angle);
 
@@ -92,8 +96,6 @@ public class Ball extends Sprite {
             this.centerX += speedX;
             this.centerY += speedY;
 
-            this.x += speedX;
-            this.y += speedY;
         }
         else
         {
@@ -118,7 +120,7 @@ public class Ball extends Sprite {
     }
 
     public function Increase(smallRadius: Number): void{
-        this.radius += smallRadius;
+        this.radius = Math.sqrt(Math.pow(this.radius, 2) + Math.pow(smallRadius, 2));
         this.graphics.clear();
         this.graphics.beginFill(this.color);
         this.graphics.drawCircle(this.radius, this.radius, this.radius);
@@ -186,22 +188,42 @@ public class Ball extends Sprite {
         }
     }
 
+    private var startMouseDownTime: int;
+    public function StartMouseDown(event:MouseEvent): void {
+        this.startMouseDownTime = getTimer();
+    }
+
+    var koefFriction: Number = 0.02;
+    var gravAcceleration: Number = 9.8;
+    var weight: Number;
+    var density: Number = 0.01; // плотность
+
+    var frictionPower: Number;
+    public function EndMouseDown(event:MouseEvent): void {
+        this.power = (getTimer() - this.startMouseDownTime) * 10;
+        if(this.power > 5000)
+        {
+            this.power = 5000;
+        }
+        this.power /= 2;
+
+        this.weight = 4 / 3 * Math.PI * Math.pow(this.radius, 3) * this.density;
+        //this.weight = Math.PI * Math.pow(this.radius, 2);
+        this.frictionPower = this.koefFriction * this.weight * gravAcceleration;
+        this.power -= this.frictionPower;
+
+        //this.power = 10000;
+        trace(power, frictionPower, weight, power / this.weight);
+    }
+
     // Обработка клика
     public function MoveByClick(event:MouseEvent): void{
-     //   var clickPoint:Point = new Point(event.stageX, event.stageY);
-    //    var scenePoint:Point = scene.globalToLocal(clickPoint);
-     //   var clickX: Number = scenePoint.x - this.radius;
-     //   var clickY: Number = scenePoint.y - this.radius;
-
         var clickX: Number = event.stageX - this.radius;
         var clickY: Number = event.stageY - this.radius;
 
         this.angle = Math.atan2(this.centerY - clickY, this.centerX - clickX);
-
-     //   trace(this.angle + "; " + this.angle * 180 / Math.PI);
-
-        this.speed = 15;
         this.acceleration = 1;
+        this.speed = power / this.weight * 10;
      //   trace(this.x, this.y, "Center: "+this.centerX, this.centerY);
     }
 
