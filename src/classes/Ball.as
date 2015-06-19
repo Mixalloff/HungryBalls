@@ -27,22 +27,18 @@ public class Ball extends Sprite {
 
     public function get centerX(): Number{
         return this.x + this.radius;
-       // return this.sh.x + this.radius;
     }
 
     public function set centerX(posX: Number): void{
         this.x = posX - this.radius;
-       // this.sh.x  = posX - this.radius;
     }
 
     public function get centerY(): Number{
         return this.y + this.radius;
-       // return this.sh.y + this.radius;
     }
 
     public function set centerY(posY: Number): void{
-        this.y = posY - this.radius ;
-  //      this.sh.y  = posY - this.radius;
+        this.y = posY - this.radius;
     }
 
     public function Ball(scene:Playfield, isPlayer: Boolean = false, radius:Number = 0, posX:Number = 0, posY:Number = 0, color:uint = 0xff0000) {
@@ -96,10 +92,8 @@ public class Ball extends Sprite {
             this.centerX += speedX;
             this.centerY += speedY;
 
-            if (isPlayer) {
-                trace("SpeedX = " + speedX, "SpeedY = " + speedY);
-                trace("centerX = " + centerX, "centerY = " + centerY);
-            }
+            this.x += speedX;
+            this.y += speedY;
         }
         else
         {
@@ -112,33 +106,23 @@ public class Ball extends Sprite {
                 this.angle = Math.PI + (Math.PI - this.angle);
             }
         }
-
-        //textField.text = this.x+"; "+this.y;
-        this.graphics.beginFill(0x00ff00);
-        this.graphics.drawCircle(this.centerX, this.centerY, 1);
-        this.graphics.endFill();
-
-       //scene.CheckIntersect();
     }
-
 
     // Рисование двумерного шара
     private function Draw2d():void {
         this.graphics.beginFill(this.color);
-        this.graphics.drawCircle(this.centerX, this.centerY, this.radius);
+        this.graphics.drawCircle(this.radius, this.radius, this.radius);
         this.graphics.endFill();
 
-        var sh: Shape = new Shape();
-        sh.graphics.beginFill(this.color, .2);
-        sh.graphics.drawCircle(this.centerX, this.centerY, this.radius);
-        sh.graphics.endFill();
-
-        //this.graphics.beginFill(0x000000);
-        //this.graphics.drawCircle(this.x, this.y, 1);
-        //this.graphics.endFill();
-
-        scene.addChild(sh);
         scene.addChild(this);
+    }
+
+    public function Increase(smallRadius: Number): void{
+        this.radius += smallRadius;
+        this.graphics.clear();
+        this.graphics.beginFill(this.color);
+        this.graphics.drawCircle(this.radius, this.radius, this.radius);
+        this.graphics.endFill();
     }
 
     // Определяет позицию нового шара
@@ -202,6 +186,7 @@ public class Ball extends Sprite {
         }
     }
 
+    // Обработка клика
     public function MoveByClick(event:MouseEvent): void{
      //   var clickPoint:Point = new Point(event.stageX, event.stageY);
     //    var scenePoint:Point = scene.globalToLocal(clickPoint);
@@ -220,12 +205,5 @@ public class Ball extends Sprite {
      //   trace(this.x, this.y, "Center: "+this.centerX, this.centerY);
     }
 
-   /* public function set posX(x: Number): void {
-        this.x = x - this.radius;
-    }
-
-    public function set posY(y: Number): void {
-        this.y = y - this.radius;
-    }*/
 }
 }

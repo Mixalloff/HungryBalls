@@ -34,6 +34,28 @@ public class Playfield extends Sprite {
         test.graphics.drawRect(xSize, ySize, 20,20);
         test.graphics.endFill();
         this.addChild(test);*/
+        DrawGrid();
+    }
+
+    // Сетка на поле
+    function DrawGrid(): void {
+
+        // Шаг
+        var step: int = 50;
+        for(var i: int = 0; i <= this.SizeX / step; i++ ) {
+            var shape: Shape = new Shape();
+            shape.graphics.lineStyle(1, 0x000000);
+            shape.graphics.moveTo(i*step, 0);
+            shape.graphics.lineTo(i*step, this.SizeY);
+            this.addChild(shape);
+        }
+        for(var i: int = 0; i <= this.SizeY / step; i++ ) {
+            var shape: Shape = new Shape();
+            shape.graphics.lineStyle(1, 0x000000);
+            shape.graphics.moveTo(0, i*step);
+            shape.graphics.lineTo(this.SizeX, i*step);
+            this.addChild(shape);
+        }
     }
 
     function enterFrame(event:Event):void {
@@ -79,22 +101,26 @@ public class Playfield extends Sprite {
                 {
                     // Удаление меньшего шара
                     if(this.balls[i].radius < this.balls[j].radius) {
-                        this.removeChild(this.balls[i]);
-                        //scene.balls[i] = null;
-                        this.balls.splice(i, 1);
-                        i--;
+                        this.DeleteBall(this.balls[i], this.balls[j], i--);
                         break;
                     }
                     else{
-                        this.removeChild(this.balls[j]);
-                        //scene.balls[j] = null;
-                        this.balls.splice(j, 1);
-                        j--;
+                        this.DeleteBall(this.balls[j], this.balls[i], j--);
                     }
                 }
             }
         }
     }
+
+    // Удаление шара
+    private function DeleteBall(smallBall: Ball, bigBall: Ball, ind: int): void
+    {
+        bigBall.Increase(smallBall.radius);
+        this.removeChild(smallBall);
+        this.balls.splice(ind, 1);
+    }
+
+
 
     public function get SizeX(): Number{
         return xSize;
