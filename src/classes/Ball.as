@@ -30,7 +30,13 @@ public class Ball extends Sprite {
         if (isPlayer == false) {
             this.radius = Math.random() * 20 + 5; // [5; 25]
             DefinePosition();
-            this.color = color;
+            //this.color = 0xffff00;
+            this.color = Math.random() * 0xFFFFFF;
+
+            /*if(this.x==0 || this.y == 0){
+                trace("err");
+            }*/
+
         }
         else {
             this.radius = radius;
@@ -87,41 +93,58 @@ public class Ball extends Sprite {
         this.graphics.beginFill(this.color);
         this.graphics.drawCircle(this.x, this.y, this.radius);
         this.graphics.endFill();
+
+        //this.graphics.beginFill(0x000000);
+        //this.graphics.drawCircle(this.x, this.y, 1);
+        //this.graphics.endFill();
+
         scene.addChild(this);
     }
 
     // Определяет позицию нового шара
     private function DefinePosition():void {
-        var flag:Boolean = true;
-        while (flag == true) {
+        var flag:Boolean = false;
+        while (!flag) {
             flag = true;
-            var posX:Number = Math.random() * (scene.SizeX - 2 * this.radius) + this.radius;
-            var posY:Number = Math.random() * (scene.SizeY - 2 * this.radius) + this.radius;
-            if (this.InField(posX, posY)) {
+            this.x = Math.random() * (scene.SizeX / 2 - 2 * this.radius) + this.radius;
+            this.y = Math.random() * (scene.SizeY / 2 - 2 * this.radius) + this.radius;
+            var globPoint: Point = scene.globalToLocal(new Point(this.x, this.y));
+            this.x = globPoint.x;
+            this.y = globPoint.y;
+            if (this.InField(this.x, this.y)) {
                 for (var i:int = 0; i < scene.balls.length; i++) {
-                    if (Math.sqrt(Math.pow((scene.balls[i].x - posX), 2) + Math.pow((scene.balls[i].y - posY), 2)) > scene.balls[i].radius + this.radius) {
+                    if(this.IsIntersects(this, scene.balls[i]))
+                    {
                         flag = false;
                     }
                 }
             }
-            if (flag == false){
-                var stagePoint:Point = new Point(posX, posY);
-                var scenePoint:Point = scene.localToGlobal(stagePoint);
-                this.x = scenePoint.x - this.radius;
-                this.y = scenePoint.y - this.radius;
-
-                //this.x = posX;
-                //this.y = posY;
-            }
         }
+    }
+
+    // Проверяет, пересекаются ли 2 шара (true - да, false - нет)
+    private function IsIntersects(ball1: Ball, ball2: Ball): Boolean
+    {
+        var ball1Point: Point = scene.globalToLocal(new Point(ball1.x, ball1.y));
+        var ball2Point: Point = scene.globalToLocal(new Point(ball2.x, ball2.y));
+
+        if (Math.sqrt(Math.pow((ball1Point.x - ball2Point.x), 2) + Math.pow((ball1Point.y - ball2Point.y), 2)) <= ball1.radius + ball2.radius) {
+            return true;
+        }
+        return false;
     }
 
     // Проверяет, находится ли шар в пределах поля
     private function InField(posX: Number, posY: Number): Boolean {
+        if(posX == 0 || posY == 0)
+        {
+            var a:int=0;
+        }
+
         if (posX + 2 * this.radius > this.scene.SizeX ||
-                posX < 0 ||
+                posX <= 0 ||
                 posY + 2 * this.radius > this.scene.SizeY ||
-                posY < 0)
+                posY <= 0)
         {
             return false;
         }

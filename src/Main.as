@@ -28,7 +28,11 @@ public class Main extends Sprite {
         var newScene: Playfield = new Playfield(this);
         var newBall: Ball = new Ball(newScene, true, 20, 20, 20);
 
-            var botBall: Ball = new Ball(newScene);
+        var arr:Array = new Array();
+
+        for(var i: int = 0; i < 20; i++ ) {
+            arr[arr.length] = new Ball(newScene, false);
+        }
 
        // workPlace.addEventListener(MouseEvent.CLICK, newBall.tryMove);
         stage.addEventListener(MouseEvent.CLICK, newBall.MoveByClick);
