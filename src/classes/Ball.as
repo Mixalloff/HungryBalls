@@ -2,112 +2,85 @@
  * Created by mikhail on 17.06.15.
  */
 package classes {
-import flash.display.Shape;
 import flash.display.Sprite;
-import flash.display.Stage;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.ColorTransform;
-import flash.geom.Point;
-import flash.globalization.NumberParseResult;
-import flash.text.TextField;
 import flash.utils.getTimer;
 
 // Класс шара
 public class Ball extends Sprite {
     private var scene: Playfield;
-    private var angle: Number;
     public var isPlayer: Boolean;
     public var radius: Number;
-    //public var color: uint;
 
     // Физические характеристики
     const gravAcceleration: Number = 9.8;
+    private var angle: Number = 0;
+    private var frictionPower: Number = 0;
     private var koefFriction: Number = 0.02;
-    private var weight: Number;
+    private var weight: Number = 0;
     private var density: Number = 0.01; // плотность
-    private var speed: Number;
-    private var power: Number;
+    private var speed: Number = 0;
+    private var power: Number = 0;
     private var colorBall: uint;
 
-    private var acceleration: Number;
+  // private var acceleration: Number;
 
-   // public var textField:TextField = new TextField();
-
+    // Установка цвета шара
     public function set color(col: uint): void{
-       // this.graphics.beginFill(col);
-       // this.graphics.endFill();
         var colorTransform:ColorTransform = new ColorTransform();
         colorTransform.color = col;
         this.transform.colorTransform = colorTransform;
         this.colorBall = col;
     }
 
+    // Получение цвета шара
     public function get color(): uint{
         return this.colorBall;
     }
 
+    // Получение X координаты шара
     public function get centerX(): Number{
         return this.x + this.radius;
     }
 
+    // Установка X координаты шара
     public function set centerX(posX: Number): void{
         this.x = posX - this.radius;
     }
 
+    // Получение Y координаты шара
     public function get centerY(): Number{
         return this.y + this.radius;
     }
 
+    // Установка Y координаты шара
     public function set centerY(posY: Number): void{
         this.y = posY - this.radius;
     }
 
+    // Конструктор
     public function Ball(scene:Playfield, isPlayer: Boolean = false, radius:Number = 0, posX:Number = 0, posY:Number = 0, color:uint = 0xff0000) {
         this.scene = scene;
         this.isPlayer = isPlayer;
         if (isPlayer == false) {
-            this.radius = Math.random() * 15 + 5; // [5; 25]
+            this.radius = Math.random() * 15 + 5;
             DefinePosition();
-
-            // Цвет из интервала
-           // var lowLimit: uint = 0xFFFF00;
-           // var highLimit: uint = 0xFFFFFF;
-           // this.color = lowLimit + Math.random() * (highLimit - lowLimit);
-
-            // Формула цвета
-            //color=r*256*256+g*256+b
+            this.addEventListener(Event.ENTER_FRAME, this.enemyBallEnterFrame);
         }
         else {
             this.radius = radius;
-
-            /*var globPoint: Point = scene.globalToLocal(new Point(posX, posY));
-            this.x = globPoint.x;
-            this.y = globPoint.y;*/
             this.centerX = posX;
             this.centerY = posY;
             this.color = color;
-
         }
-
-        this.weight = 4 / 3 * Math.PI * Math.pow(this.radius, 3) * this.density;
-        this.frictionPower = this.koefFriction * this.weight * gravAcceleration;
-
-        this.angle = 0;
-        this.speed = 0;
-        this.acceleration = 0;
-
-        // Координаты шара
-       // textField.text = this.x+"; "+this.y+"; "+this.radius;
-       // addChild(textField);
-
+        PhysicCalculate(0);
         Draw2d();
-
-
-        //scene.balls[scene.balls.length] = this;
         scene.addBall(this);
     }
 
+    // Вычисление физических показателей с учетом переданной силы
     private function PhysicCalculate(power: Number): void
     {
         this.weight = 4 / 3 * Math.PI * Math.pow(this.radius, 3) * this.density;
@@ -116,9 +89,16 @@ public class Ball extends Sprite {
         this.speed = this.power / this.weight;
     }
 
-    public function enterFrame(event:Event):void {
-      //  this.speed *= this.acceleration;
-       // this.acceleration *= 1 - this.koefFriction;
+    // Обработка смены кадра для чужих шаров
+    public function enemyBallEnterFrame(event:Event):void {
+        if (!scene.gameIsOver) {
+            RandomMove();
+        }
+    }
+
+    // Перемещение шара на заданное расстояние по 2 осям, если это возможно.
+    // Если перемещение выходит за рамки поля, возвращает False
+    private function Move(): void{
         if (this.power >= this.frictionPower) {
             this.power -= this.frictionPower;
         }
@@ -127,25 +107,16 @@ public class Ball extends Sprite {
             this.power = 0;
         }
         this.speed = this.power / this.weight;
-
         var speedX: Number = speed * Math.cos(this.angle);
         var speedY: Number = speed * Math.sin(this.angle);
-
         while(speedX > 2 * this.radius || speedY > 2 * this.radius){
-           // speedX *= 0.9;
-           // speedY *= 0.9;
-            //this.power *= 0.9;
-            //this.speed = this.power / this.weight;
             this.PhysicCalculate(power * 0.9);
             speedX = speed * Math.cos(this.angle);
             speedY = speed * Math.sin(this.angle);
         }
         if (this.InField(this.centerX + speedX, this.centerY + speedY)){
-
-
             this.centerX += speedX;
             this.centerY += speedY;
-
         }
         else
         {
@@ -165,10 +136,13 @@ public class Ball extends Sprite {
                 this.angle = Math.PI + (Math.PI - this.angle);
                 damping = Math.abs(Math.cos(this.angle)) * (1 - minDamping) + minDamping;
             }
-
-            trace(damping);
             this.PhysicCalculate(power * damping);
         }
+    }
+
+    // Обработка смены кадра для пользовательского шара
+    public function userBallEnterFrame(event:Event):void {
+         this.Move();
     }
 
     // Рисование двумерного шара
@@ -180,13 +154,13 @@ public class Ball extends Sprite {
         scene.addChild(this);
     }
 
+    // Увеличение шара
     public function Increase(smallRadius: Number): void{
         this.radius = Math.sqrt(Math.pow(this.radius, 2) + Math.pow(smallRadius, 2));
         this.graphics.clear();
         this.graphics.beginFill(this.color);
         this.graphics.drawCircle(this.radius, this.radius, this.radius);
         this.graphics.endFill();
-
         this.PhysicCalculate(this.power);
 
         // Завершение игры
@@ -202,10 +176,6 @@ public class Ball extends Sprite {
             flag = true;
             this.centerX = Math.random() * (scene.SizeX / 2 - this.radius) + this.radius;
             this.centerY = Math.random() * (scene.SizeY / 2 - this.radius) + this.radius;
-
-           /* var globPoint: Point = scene.globalToLocal(new Point(this.x, this.y));
-            this.x = globPoint.x;
-            this.y = globPoint.y;*/
 
             if (this.InField(this.centerX, this.centerY)) {
                 for (var i:int = 0; i < scene.balls.length; i++) {
@@ -230,66 +200,39 @@ public class Ball extends Sprite {
         return true;
     }
 
-    // Перемещение шара на заданное расстояние по 2 осям, если это возможно.
-    // Если перемещение выходит за рамки поля, возвращает False
-    private function Move(deltaX: Number, deltaY: Number): Boolean{
-        if (!this.InField(this.centerX + deltaX, this.centerX + deltaY))
-        {
-            return false;
+    // Генерирует случайные параметры для передвижения
+    public function RandomMove(): void{
+        if (this.power == 0 && getTimer() > 3000) {
+            this.angle = (Math.random() * 360 + 180) / 180 * Math.PI;
+            PhysicCalculate(Math.random() * 500 * this.radius);
         }
-        else
-        {
-            this.centerX += deltaX;
-            this.centerY += deltaY;
-            //trace(this.x, this.y);
-            // textField.text = this.x + "; " + this.y;
-
-        }
-        return true;
+        this.Move();
     }
 
-    // Случайное передвижение
-    public function tryMove(event:MouseEvent): void{
-        while (!Move(Math.random()*50 - 25, Math.random()*50 - 25))
-        {
-            continue;
-        }
-    }
-
+    // Время начала нажатия мыши
     private var startMouseDownTime: int;
+
+    // Обработка начала нажатия мыши
     public function StartMouseDown(event:MouseEvent): void {
         this.startMouseDownTime = getTimer();
     }
 
-    var frictionPower: Number;
+    // Обработка отпускания мыши
     public function EndMouseDown(event:MouseEvent): void {
         this.power = (getTimer() - this.startMouseDownTime);
         if(this.power > 1000)
         {
             this.power = 1000;
         }
-       // this.power /= 2;
-
-       // this.weight = 4 / 3 * Math.PI * Math.pow(this.radius, 3) * this.density;
-        //this.frictionPower = this.koefFriction * this.weight * gravAcceleration;
-        //this.power -= this.frictionPower;
-
-        this.PhysicCalculate(power *2);
-
-        //this.power = 10000;
-       // trace(power, frictionPower, weight, power / this.weight);
+        this.PhysicCalculate(power * this.radius);
     }
 
     // Обработка клика
     public function CalculateAngle(event:MouseEvent): void{
         var clickX: Number = event.stageX - this.radius;
         var clickY: Number = event.stageY - this.radius;
-
         this.angle = Math.atan2(this.centerY - clickY, this.centerX - clickX);
       //  this.acceleration = 1;
-      //  this.speed = power / this.weight;
-     //   trace(this.x, this.y, "Center: "+this.centerX, this.centerY);
     }
-
 }
 }

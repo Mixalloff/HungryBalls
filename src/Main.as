@@ -18,24 +18,23 @@ public class Main extends Sprite {
     public var userBall: Ball;
     public var startEnemyCount: Number;
 
+    // Файл конфига
+    const CONFIG_URL:String = "gameConfig.json";
+
     public function Main() {
 
         newScene = new Playfield(stage);
         userBall = new Ball(newScene, true, 10, 20, 20);
+
         // Загрузка конфига
-        const CONFIG_URL:String = "gameConfig.json";
         getJson(CONFIG_URL);
 
        // stage.color = 0x000000;
         stage.scaleMode = StageScaleMode.NO_SCALE;
-
-       // workPlace.addEventListener(MouseEvent.CLICK, newBall.tryMove);
         stage.addEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
-        userBall.addEventListener(Event.ENTER_FRAME, userBall.enterFrame);
-
+        userBall.addEventListener(Event.ENTER_FRAME, userBall.userBallEnterFrame);
         stage.addEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
         stage.addEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
-
     }
 
     private function onLoaderComplete(e:Event):void{
@@ -50,7 +49,6 @@ public class Main extends Sprite {
             new Ball(newScene, false);
         }
         for (var k:int = 1; k < newScene.balls.length; k++) {
-         //this.GenerateEnemyColor(balls[k]);
             newScene.GenerateEnemyColorRGB(newScene.balls[k]);
          }
 
