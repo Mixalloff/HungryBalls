@@ -16,18 +16,36 @@ import flash.utils.getTimer;
 // Класс шара
 public class Ball extends Sprite {
     private var scene: Playfield;
-    public var radius: Number;
-    private var color: uint;
-    private var isPlayer: Boolean;
-
-    private var speed: Number;
     private var angle: Number;
+    public var isPlayer: Boolean;
+    public var radius: Number;
+    //public var color: uint;
+
+    // Физические характеристики
+    const gravAcceleration: Number = 9.8;
+    private var koefFriction: Number = 0.02;
+    private var weight: Number;
+    private var density: Number = 0.01; // плотность
+    private var speed: Number;
+    private var power: Number;
+    private var colorBall: uint;
+
     private var acceleration: Number;
 
-    // Сила воздействия на шар
-    private var power: Number;
-
    // public var textField:TextField = new TextField();
+
+    public function set color(col: uint): void{
+       // this.graphics.beginFill(col);
+       // this.graphics.endFill();
+        var colorTransform:ColorTransform = new ColorTransform();
+        colorTransform.color = col;
+        this.transform.colorTransform = colorTransform;
+        this.colorBall = col;
+    }
+
+    public function get color(): uint{
+        return this.colorBall;
+    }
 
     public function get centerX(): Number{
         return this.x + this.radius;
@@ -49,13 +67,14 @@ public class Ball extends Sprite {
         this.scene = scene;
         this.isPlayer = isPlayer;
         if (isPlayer == false) {
-            this.radius = Math.random() * 20 + 5; // [5; 25]
+            this.radius = Math.random() * 15 + 5; // [5; 25]
             DefinePosition();
 
             // Цвет из интервала
-            var lowLimit: uint = 0xFFFF00;
-            var highLimit: uint = 0xFFFFFF;
-            this.color = lowLimit + Math.random() * (highLimit - lowLimit);
+           // var lowLimit: uint = 0xFFFF00;
+           // var highLimit: uint = 0xFFFFFF;
+           // this.color = lowLimit + Math.random() * (highLimit - lowLimit);
+
             // Формула цвета
             //color=r*256*256+g*256+b
         }
@@ -70,6 +89,9 @@ public class Ball extends Sprite {
             this.color = color;
 
         }
+
+        this.weight = 4 / 3 * Math.PI * Math.pow(this.radius, 3) * this.density;
+        this.frictionPower = this.koefFriction * this.weight * gravAcceleration;
 
         this.angle = 0;
         this.speed = 0;
@@ -86,27 +108,66 @@ public class Ball extends Sprite {
         scene.addBall(this);
     }
 
+    private function PhysicCalculate(power: Number): void
+    {
+        this.weight = 4 / 3 * Math.PI * Math.pow(this.radius, 3) * this.density;
+        this.frictionPower = this.koefFriction * this.weight * gravAcceleration;
+        this.power = power - this.frictionPower;
+        this.speed = this.power / this.weight;
+    }
+
     public function enterFrame(event:Event):void {
-        this.speed *= this.acceleration;
-        this.acceleration *= 1 - this.koefFriction;
+      //  this.speed *= this.acceleration;
+       // this.acceleration *= 1 - this.koefFriction;
+        if (this.power >= this.frictionPower) {
+            this.power -= this.frictionPower;
+        }
+        else
+        {
+            this.power = 0;
+        }
+        this.speed = this.power / this.weight;
+
         var speedX: Number = speed * Math.cos(this.angle);
         var speedY: Number = speed * Math.sin(this.angle);
 
+        while(speedX > 2 * this.radius || speedY > 2 * this.radius){
+           // speedX *= 0.9;
+           // speedY *= 0.9;
+            //this.power *= 0.9;
+            //this.speed = this.power / this.weight;
+            this.PhysicCalculate(power * 0.9);
+            speedX = speed * Math.cos(this.angle);
+            speedY = speed * Math.sin(this.angle);
+        }
         if (this.InField(this.centerX + speedX, this.centerY + speedY)){
+
+
             this.centerX += speedX;
             this.centerY += speedY;
 
         }
         else
         {
+            //Затухание при косании со стенкой
+            var damping: Number;
+
+            // Минимальный коэффициент затухания
+            var minDamping: Number = 0.8;
+
             if (this.centerX - this.radius + speedX < 0 || this.centerX + speedX + this.radius > this.scene.SizeX)
             {
                 this.angle = Math.PI - this.angle;
+                damping = Math.abs(Math.sin(this.angle)) * (1 - minDamping) + minDamping;
             }
             else
             {
                 this.angle = Math.PI + (Math.PI - this.angle);
+                damping = Math.abs(Math.cos(this.angle)) * (1 - minDamping) + minDamping;
             }
+
+            trace(damping);
+            this.PhysicCalculate(power * damping);
         }
     }
 
@@ -125,6 +186,13 @@ public class Ball extends Sprite {
         this.graphics.beginFill(this.color);
         this.graphics.drawCircle(this.radius, this.radius, this.radius);
         this.graphics.endFill();
+
+        this.PhysicCalculate(this.power);
+
+        // Завершение игры
+        if (Math.PI * Math.pow(this.radius,2) > 0.5 * scene.totalArea) {
+            scene.GameOver(this.isPlayer);
+        }
     }
 
     // Определяет позицию нового шара
@@ -193,37 +261,33 @@ public class Ball extends Sprite {
         this.startMouseDownTime = getTimer();
     }
 
-    var koefFriction: Number = 0.02;
-    var gravAcceleration: Number = 9.8;
-    var weight: Number;
-    var density: Number = 0.01; // плотность
-
     var frictionPower: Number;
     public function EndMouseDown(event:MouseEvent): void {
-        this.power = (getTimer() - this.startMouseDownTime) * 10;
-        if(this.power > 5000)
+        this.power = (getTimer() - this.startMouseDownTime);
+        if(this.power > 1000)
         {
-            this.power = 5000;
+            this.power = 1000;
         }
-        this.power /= 2;
+       // this.power /= 2;
 
-        this.weight = 4 / 3 * Math.PI * Math.pow(this.radius, 3) * this.density;
-        //this.weight = Math.PI * Math.pow(this.radius, 2);
-        this.frictionPower = this.koefFriction * this.weight * gravAcceleration;
-        this.power -= this.frictionPower;
+       // this.weight = 4 / 3 * Math.PI * Math.pow(this.radius, 3) * this.density;
+        //this.frictionPower = this.koefFriction * this.weight * gravAcceleration;
+        //this.power -= this.frictionPower;
+
+        this.PhysicCalculate(power *2);
 
         //this.power = 10000;
-        trace(power, frictionPower, weight, power / this.weight);
+       // trace(power, frictionPower, weight, power / this.weight);
     }
 
     // Обработка клика
-    public function MoveByClick(event:MouseEvent): void{
+    public function CalculateAngle(event:MouseEvent): void{
         var clickX: Number = event.stageX - this.radius;
         var clickY: Number = event.stageY - this.radius;
 
         this.angle = Math.atan2(this.centerY - clickY, this.centerX - clickX);
-        this.acceleration = 1;
-        this.speed = power / this.weight * 10;
+      //  this.acceleration = 1;
+      //  this.speed = power / this.weight;
      //   trace(this.x, this.y, "Center: "+this.centerX, this.centerY);
     }
 

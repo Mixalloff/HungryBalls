@@ -8,6 +8,8 @@ import flash.display.Sprite;
 import flash.display.Stage;
 import flash.events.Event;
 import flash.text.TextField;
+import flash.text.TextFormat;
+import flash.text.engine.TextBlock;
 
 // Класс игрового поля
 public class Playfield extends Sprite {
@@ -17,6 +19,18 @@ public class Playfield extends Sprite {
     public var workPlace: Stage;
     public var balls: Array = new Array();
 
+    // Цвета из конфига
+    public var userBallColor: uint;
+    public var enemyBallColor1: uint;
+    public var enemyBallColor2: uint;
+
+    public function set setUserBallColor(col: uint): void{
+        this.balls[0].color = col;
+        this.userBallColor = col;
+    }
+
+    public var totalArea: Number;
+
     public function Playfield(workPlace:Stage, width: Number = 500, height: Number = 400, color: uint = 0x550055) {
         this.workPlace = workPlace;
         this.xSize = width;
@@ -24,16 +38,12 @@ public class Playfield extends Sprite {
         this.x = 0;//(this.workPlace.stage.stageWidth - this.xSize) / 2;
         this.y = 0;//(this.workPlace.stage.fullScreenHeight - this.ySize) / 2;
         this.color = color;
+        this.totalArea = 0;
 
         this.addEventListener(Event.ENTER_FRAME, enterFrame);
 
         Draw2d();
 
-       /* var test: Shape = new Shape();
-        test.graphics.beginFill(0x00ff00);
-        test.graphics.drawRect(xSize, ySize, 20,20);
-        test.graphics.endFill();
-        this.addChild(test);*/
         DrawGrid();
     }
 
@@ -68,10 +78,138 @@ public class Playfield extends Sprite {
             square.graphics.endFill();
             this.addChild(square);
         }
+
+        /*for (var k:int = 0; k < this.balls.length; k++) {
+            //this.GenerateEnemyColor(balls[k]);
+            GenerateEnemyColorRGB(balls[k]);
+        }*/
     }
 
     public function addBall(ball: Ball): void {
         this.balls[this.balls.length] = ball;
+        totalArea += Math.PI * Math.pow(ball.radius, 2);
+        if (ball.isPlayer)
+        {
+            ball.color = userBallColor;
+        }
+        else
+        {
+            //GenerateEnemyColor(ball);
+           // GenerateEnemyColorRGB(ball);
+        }
+    }
+
+   /* private function GenerateEnemyColor(ball: Ball): void
+    {
+        if (!ball.isPlayer) {
+            var maxRadius:Number = ball.radius;
+            var minRadius:Number = ball.radius;
+
+            // Находим максимальный и минимальный радиус
+            for (var i:int = 1; i < this.balls.length; i++) {
+                if (this.balls[i].radius < minRadius) {
+                    minRadius = balls[i].radius;
+                }
+                if (this.balls[i].radius > maxRadius) {
+                    maxRadius = balls[i].radius;
+                }
+            }
+
+            if (maxRadius != ball.radius) {
+                ball.color = ((ball.radius - minRadius) / (maxRadius - minRadius) * (enemyBallColor2 - enemyBallColor1));
+            }
+            else {
+                ball.color = enemyBallColor2;
+            }
+        }
+        //trace(Number(ball.color));
+    }*/
+
+    function HexToRGB(value:uint):Object {
+        var rgb:Object = new Object();
+        rgb.r = (value >> 16) & 0xFF;
+        rgb.g = (value >> 8) & 0xFF;
+        rgb.b = value & 0xFF;
+        return rgb;
+    }
+
+    public function GenerateEnemyColorRGB(ball: Ball): void{
+        if (!ball.isPlayer) {
+            var enemyLowLimitColor:Object = HexToRGB(this.enemyBallColor1);
+            var enemyHighLimitColor:Object = HexToRGB(this.enemyBallColor2);
+
+            // Средняя граница (для сравнения с шаром пользователя)
+            var avgColor:Object = new Object();
+            avgColor.r = Math.round((enemyHighLimitColor.r - enemyLowLimitColor.r) / 2);
+            avgColor.g = Math.round((enemyHighLimitColor.g - enemyLowLimitColor.g) / 2);
+            avgColor.b = Math.round((enemyHighLimitColor.b - enemyLowLimitColor.b) / 2);
+
+            var lowRadiusLimit:Number = ball.radius;
+            var highRadiusLimit:Number = ball.radius;
+
+            // Находим максимальный и минимальный радиус
+            for (var i:int = 1; i < this.balls.length; i++) {
+                if (this.balls[i].radius < lowRadiusLimit) {
+                    lowRadiusLimit = balls[i].radius;
+                }
+                if (this.balls[i].radius > highRadiusLimit) {
+                    highRadiusLimit = balls[i].radius;
+                }
+            }
+
+            // Цвет начала диапазона
+            var startColorRange: Object = new Object();
+
+            // Новый цвет
+            var newCol:Object = new Object();
+            
+            if (ball.radius < this.balls[0].radius) {
+                highRadiusLimit = this.balls[0].radius;
+                startColorRange = enemyLowLimitColor;
+            }
+            else {
+                lowRadiusLimit = this.balls[0].radius;
+                startColorRange.r = enemyHighLimitColor.r - avgColor.r;
+                startColorRange.g = enemyHighLimitColor.g - avgColor.g;
+                startColorRange.b = enemyHighLimitColor.b - avgColor.b;
+            }
+            var proportion:Number = RadiusProportion(ball.radius, lowRadiusLimit, highRadiusLimit);
+            newCol.r = startColorRange.r + Math.round(proportion * (avgColor.r));
+            newCol.g = startColorRange.g + Math.round(proportion * (avgColor.g));
+            newCol.b = startColorRange.b + Math.round(proportion * (avgColor.b));
+
+            ball.color = newCol.r * 256 * 256 + newCol.g * 256 + newCol.b;
+        }
+    }
+
+    function RadiusProportion(radius: Number, smallRadius: Number, bigRadius: Number): Number{
+        if (bigRadius != smallRadius){
+            return ((radius - smallRadius) / (bigRadius - smallRadius));
+        }
+        return 1;
+    }
+
+    public function GameOver(isPlayer: Boolean): void
+    {
+        var lbl: String;
+        var gameOver: TextField = new TextField();
+        var format: TextFormat = new TextFormat();
+        format.size = 22;
+
+        if (isPlayer)
+        {
+            lbl = "You win!";
+        }
+        else
+        {
+            lbl = "You lose!";
+        }
+
+        gameOver.text = "Game over! " + lbl;
+        this.addChild(gameOver);
+        gameOver.y -= 50;
+        gameOver.width = 500;
+        gameOver.setTextFormat(format);
     }
 
     // Рисование двумерного поля
@@ -102,10 +240,16 @@ public class Playfield extends Sprite {
                     // Удаление меньшего шара
                     if(this.balls[i].radius < this.balls[j].radius) {
                         this.DeleteBall(this.balls[i], this.balls[j], i--);
+                        this.GameOver(false);
                         break;
                     }
                     else{
                         this.DeleteBall(this.balls[j], this.balls[i], j--);
+                    }
+
+                    for (var k:int = 0; k < this.balls.length; k++) {
+                        //this.GenerateEnemyColor(balls[k]);
+                        GenerateEnemyColorRGB(balls[k]);
                     }
                 }
             }
