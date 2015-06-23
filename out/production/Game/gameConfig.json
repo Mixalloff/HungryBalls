@@ -1,1 +1,1 @@
-{"user": {"color": {"r":0, "g":255,"b": 0}}, "enemy": {"color1": {"r":0, "g":0,"b": 255}, "color2": {"r":255, "g":0,"b": 0}}, "enemyCount": 10}
+{"user": {"color": {"r":0, "g":255,"b": 0}}, "enemy": {"color1": {"r":0, "g":0,"b": 255}, "color2": {"r":255, "g":0,"b": 0}}, "enemyCount": 20}

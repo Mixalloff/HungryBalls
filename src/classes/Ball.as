@@ -11,6 +11,8 @@ import flash.utils.getTimer;
 // Класс шара
 public class Ball extends Sprite {
     private var scene: Playfield;
+    private var startTime: Number;
+    private var startDelay: Number;
     public var isPlayer: Boolean;
     public var radius: Number;
 
@@ -75,6 +77,10 @@ public class Ball extends Sprite {
             this.centerY = posY;
             this.color = color;
         }
+
+        this.startTime = getTimer();
+        this.startDelay = 3000;
+
         PhysicCalculate(0);
         Draw2d();
         scene.addBall(this);
@@ -155,8 +161,25 @@ public class Ball extends Sprite {
     }
 
     // Увеличение шара
-    public function Increase(smallRadius: Number): void{
-        this.radius = Math.sqrt(Math.pow(this.radius, 2) + Math.pow(smallRadius, 2));
+    public function Increase(smallBall: Ball): void{
+        this.radius = Math.sqrt(Math.pow(this.radius, 2) + Math.pow(smallBall.radius, 2));
+
+        if (!this.InField(this.centerX, centerY))
+        {
+            if (centerX + this.radius > this.scene.SizeX){
+                centerX -= centerX + this.radius - this.scene.SizeX;
+            }
+            if (centerX - this.radius < 0){
+                centerX -= centerX - this.radius;
+            }
+            if (centerY + this.radius > this.scene.SizeY){
+                centerY -= centerY + this.radius - this.scene.SizeY;
+            }
+            if (centerY - this.radius < 0){
+                centerY -= centerY - this.radius;
+            }
+        }
+
         this.graphics.clear();
         this.graphics.beginFill(this.color);
         this.graphics.drawCircle(this.radius, this.radius, this.radius);
@@ -164,8 +187,18 @@ public class Ball extends Sprite {
         this.PhysicCalculate(this.power);
 
         // Завершение игры
-        if (Math.PI * Math.pow(this.radius,2) > 0.5 * scene.totalArea) {
-            scene.GameOver(this.isPlayer);
+        if (smallBall.isPlayer) {
+            scene.GameOver("Вы проиграли! Вас уничтожили!");
+        }
+        else {
+            if (Math.PI * Math.pow(this.radius, 2) > 0.5 * scene.totalArea) {
+                if (this.isPlayer == true) {
+                    scene.GameOver("Вы победили! Ваша площадь больше суммы других!");
+                }
+                else {
+                    scene.GameOver("Вы проиграли! Площадь одного из соперников больше суммы остальных!");
+                }
+            }
         }
     }
 
@@ -174,8 +207,8 @@ public class Ball extends Sprite {
         var flag:Boolean = false;
         while (!flag) {
             flag = true;
-            this.centerX = Math.random() * (scene.SizeX / 2 - this.radius) + this.radius;
-            this.centerY = Math.random() * (scene.SizeY / 2 - this.radius) + this.radius;
+            this.centerX = Math.random() * (scene.SizeX - 2 * this.radius) + this.radius;
+            this.centerY = Math.random() * (scene.SizeY - 2 * this.radius) + this.radius;
 
             if (this.InField(this.centerX, this.centerY)) {
                 for (var i:int = 0; i < scene.balls.length; i++) {
@@ -202,9 +235,11 @@ public class Ball extends Sprite {
 
     // Генерирует случайные параметры для передвижения
     public function RandomMove(): void{
-        if (this.power == 0 && getTimer() > 3000) {
+        var PowerKoef: Number = 200;
+
+        if (this.power == 0 && getTimer() - this.startTime > this.startDelay) {
             this.angle = (Math.random() * 360 + 180) / 180 * Math.PI;
-            PhysicCalculate(Math.random() * 500 * this.radius);
+            PhysicCalculate(Math.random() * PowerKoef * this.radius);
         }
         this.Move();
     }

@@ -2,21 +2,17 @@
  * Created by mikhail on 17.06.15.
  */
 package classes {
-import flash.display.DisplayObject;
 import flash.display.Shape;
 import flash.display.Sprite;
-import flash.display.Stage;
 import flash.events.Event;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.engine.TextBlock;
 
 // Класс игрового поля
 public class Playfield extends Sprite {
     private var xSize: Number;
     private var ySize: Number;
     private var color: uint;
-    public var workPlace: Stage;
+    private var minimalRadius: Number;
+    public var workPlace: Sprite;
     public var balls: Array = new Array();
     public var gameIsOver: Boolean = false;
 
@@ -27,6 +23,24 @@ public class Playfield extends Sprite {
     public var userBallColor: uint;
     public var enemyBallColor1: uint;
     public var enemyBallColor2: uint;
+
+    public function Playfield(workPlace: Sprite, width: Number = 500, height: Number = 400, color: uint = 0xAFEEEE) {
+        this.workPlace = workPlace;
+        this.xSize = width;
+        this.ySize = height;
+        this.x = 0;
+        this.y = 0;
+        this.color = color;
+        this.totalArea = 0;
+        Draw2d();
+        DrawGrid();
+        workPlace.addEventListener(PlayfieldEvent.GAME_STARTED, this.StartGame);
+    }
+
+    // Обработка события "Начало игры"
+    public function StartGame(e:PlayfieldEvent): void {
+        this.addEventListener(Event.ENTER_FRAME, enterFrame);
+    }
 
     // Рисование двумерного поля
     private function Draw2d(): void {
@@ -40,24 +54,29 @@ public class Playfield extends Sprite {
     // Удаление шара
     private function DeleteBall(smallBall: Ball, bigBall: Ball, ind: int): void
     {
-        bigBall.Increase(smallBall.radius);
+        bigBall.Increase(smallBall);
+        smallBall.removeEventListener(Event.ENTER_FRAME, smallBall.enemyBallEnterFrame);
         this.removeChild(smallBall);
         this.balls.splice(ind, 1);
-        if (smallBall.isPlayer) {
-            this.GameOver(false);
+    }
+
+    // Получение минимального радиуса
+    private function GetMinRadius(): void {
+        var minRad: Number = balls[0].radius;
+        for (var i:int = 1; i < this.balls.length; i++) {
+            if(balls[i].radius < minRad)
+            {
+                minRad = balls[i].radius;
+            }
         }
+        this.minimalRadius = minRad;
     }
 
     // Проверка на пересечение шаров и удаление меньших при пересечении
     private function CheckIntersect(): void
     {
-        var minRadius: Number = balls[0];
+        //var minRadius: Number = balls[0].radius;
         for (var i:int = 0; i < this.balls.length - 1; i++) {
-            // Нахождение минимального радиуса
-            if(balls[i].radius < minRadius)
-            {
-                minRadius = balls[i].radius;
-            }
             for (var j:int = i + 1; j < this.balls.length; j++) {
                 if (this.IsIntersects(this.balls[i], this.balls[j]))
                 {
@@ -73,13 +92,15 @@ public class Playfield extends Sprite {
                     for (var k:int = 0; k < this.balls.length; k++) {
                         GenerateEnemyColorRGB(balls[k]);
                     }
+
+                    GetMinRadius();
                 }
             }
         }
 
-        if(balls[0] == minRadius)
+        if(balls[0].radius == this.minimalRadius)
         {
-            this.GameOver(false);
+            this.GameOver("Вы проиграли! Ваш радиус наименьший!");
         }
     }
 
@@ -87,19 +108,6 @@ public class Playfield extends Sprite {
     public function set setUserBallColor(col: uint): void{
         this.balls[0].color = col;
         this.userBallColor = col;
-    }
-
-    public function Playfield(workPlace:Stage, width: Number = 500, height: Number = 400, color: uint = 0x550055) {
-        this.workPlace = workPlace;
-        this.xSize = width;
-        this.ySize = height;
-        this.x = 0;
-        this.y = 0;
-        this.color = color;
-        this.totalArea = 0;
-        this.addEventListener(Event.ENTER_FRAME, enterFrame);
-        Draw2d();
-        DrawGrid();
     }
 
     // Сетка на поле
@@ -126,13 +134,15 @@ public class Playfield extends Sprite {
     // Обработка смены кадра для поля
     function enterFrame(event:Event):void {
         this.CheckIntersect();
-        if (balls[0] != null) {
+
+        // Отображение пути пользовательского шара
+        /*if (balls[0] != null) {
             var square:Shape = new Shape();
             square.graphics.beginFill(0x000000);
             square.graphics.drawCircle(balls[0].centerX, balls[0].centerY, 1);
             square.graphics.endFill();
             this.addChild(square);
-        }
+        }*/
     }
 
     // Добавление шара в массив
@@ -143,6 +153,8 @@ public class Playfield extends Sprite {
         {
             ball.color = userBallColor;
         }
+
+        GetMinRadius();
     }
 
     // Получение объекта с компонентами цвета (r, g, b)
@@ -213,29 +225,25 @@ public class Playfield extends Sprite {
         return 1;
     }
 
+
+    public var endGameMessage: String;
     // Завершение игры
-    public function GameOver(isPlayer: Boolean): void
+    public function GameOver(alertMessage: String): void
     {
-        var lbl: String;
-        var gameOver: TextField = new TextField();
-        var format: TextFormat = new TextFormat();
-        format.size = 22;
-
-        if (isPlayer)
-        {
-            lbl = "You win!";
+        for (var k:int = 0; k < this.balls.length; k++) {
+            GenerateEnemyColorRGB(balls[k]);
         }
-        else
-        {
-            lbl = "You lose!";
-        }
-
-        gameOver.text = "Game over! " + lbl;
-        this.addChild(gameOver);
-        gameOver.y -= 50;
-        gameOver.width = 500;
-        gameOver.setTextFormat(format);
         this.gameIsOver = true;
+
+        endGameMessage = alertMessage;
+        this.dispatchEvent(new PlayfieldEvent(PlayfieldEvent.GAME_FINISHED));
+    }
+
+    // Очистка поля
+    public function ClearField(): void {
+        if (this.numChildren > 0){
+            this.removeChildren(0, this.numChildren - 1);
+        }
     }
 
     // Проверяет, пересекаются ли 2 шара (true - да, false - нет)
