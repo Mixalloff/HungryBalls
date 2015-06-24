@@ -1,10 +1,7 @@
 package {
 
-import classes.Ball;
 import classes.Playfield;
-import classes.PlayfieldEvent;
 import flash.display.Sprite;
-import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.net.URLLoader;
@@ -16,27 +13,26 @@ import flashx.textLayout.formats.TextAlign;
 
 public class Main extends Sprite {
     public var newScene: Playfield;
-    public var userBall: Ball;
+ //   public var userBall: Ball;
     public var startEnemyCount: Number;
 
     // Файл конфига
     const CONFIG_URL:String = "gameConfig.json";
 
+    // Данные конфига
+    var configData: Object = new Object();
+
     public function Main() {
-        StartNewGame();
+        // stage.color = 0x000000;
+
+        // Загрузка конфига
+        getJson(CONFIG_URL);
     }
 
     // Завершение игры
-    public function FinishGame(e:PlayfieldEvent): void {
+    public function FinishGame(endGameMessage: String): void {
         trace("game is finished!");
-
-        stage.removeEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
-        userBall.removeEventListener(Event.ENTER_FRAME, userBall.userBallEnterFrame);
-        stage.removeEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
-        stage.removeEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
-        newScene.removeEventListener(PlayfieldEvent.GAME_FINISHED, this.FinishGame);
-
-        ShowEndGameWindow(newScene.endGameMessage);
+        ShowEndGameWindow(endGameMessage);
     }
 
     // Открытие окна окончания игры
@@ -96,7 +92,7 @@ public class Main extends Sprite {
         win.addChild(winBtn);
         win.addChild(btnText);
 
-       // winBtn.addEventListener(MouseEvent.CLICK, RestartBtnClick);
+        //winBtn.addEventListener(MouseEvent.CLICK, RestartBtnClick);
         btnText.addEventListener(MouseEvent.CLICK, RestartBtnClick);
     }
 
@@ -108,48 +104,26 @@ public class Main extends Sprite {
 
     // Начало новой игры
     public function StartNewGame(): void {
-        if (this.numChildren > 0){
+        // Очистка поля, если оно существует и не пустое
+        if (newScene != null && this.numChildren > 0){
             newScene.ClearField();
             this.removeChildren(0, this.numChildren - 1);
         }
-        trace("game is started!");
 
-        var userBallRadius: Number = 15;
-        var userBallX: Number = 20;
-        var userBallY: Number = 20;
-
+        // Создание нового поля
         newScene = new Playfield(this);
-        userBall = new Ball(newScene, true, userBallRadius, userBallX, userBallY);
 
-        // Загрузка конфига
-        getJson(CONFIG_URL);
-
-        // stage.color = 0x000000;
-        stage.scaleMode = StageScaleMode.NO_SCALE;
-        stage.addEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
-        userBall.addEventListener(Event.ENTER_FRAME, userBall.userBallEnterFrame);
-        stage.addEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
-        stage.addEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
-        newScene.addEventListener(PlayfieldEvent.GAME_FINISHED, this.FinishGame);
+        // Установка данных конфига для поля
+        newScene.SetConfigData(this.configData);
+        trace("game is started!");
     }
 
-    // Установка параметров из конфига при завершении его загрузки
+    // Установка параметров из конфига при завершении его загрузки. Начало первой игры
     private function onLoaderComplete(e:Event):void{
         var loader:URLLoader = URLLoader(e.target);
         var data:Object = com.adobe.serialization.json.JSON.decode(loader.data);
-
-        newScene.setUserBallColor = data.user.color.r * 256 * 256 + data.user.color.g * 256 + data.user.color.b;
-        newScene.enemyBallColor1 = data.enemy.color1.r * 256 * 256 + data.enemy.color1.g * 256 + data.enemy.color1.b;
-        newScene.enemyBallColor2 = data.enemy.color2.r * 256 * 256 + data.enemy.color2.g * 256 + data.enemy.color2.b;
-        this.startEnemyCount = data.enemyCount;
-        for(var i: int = 0; i < this.startEnemyCount; i++ ) {
-            new Ball(newScene, false);
-        }
-        for (var k:int = 1; k < newScene.balls.length; k++) {
-            newScene.GenerateEnemyColorRGB(newScene.balls[k]);
-         }
-
-        this.dispatchEvent(new PlayfieldEvent(PlayfieldEvent.GAME_STARTED));
+        this.configData = data;
+        StartNewGame();
     }
 
     // Получение JSON из файла-конфига

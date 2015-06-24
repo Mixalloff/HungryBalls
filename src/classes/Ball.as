@@ -7,6 +7,7 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.ColorTransform;
 import flash.utils.getTimer;
+import flash.utils.setInterval;
 
 // Класс шара
 public class Ball extends Sprite {
@@ -69,13 +70,14 @@ public class Ball extends Sprite {
         if (isPlayer == false) {
             this.radius = Math.random() * 15 + 5;
             DefinePosition();
-            this.addEventListener(Event.ENTER_FRAME, this.enemyBallEnterFrame);
+           // setInterval(this.enemyBallTick, 1000 / scene.fps);
         }
         else {
             this.radius = radius;
             this.centerX = posX;
             this.centerY = posY;
             this.color = color;
+            //setInterval(this.userBallTick, 1000 / scene.fps);
         }
 
         this.startTime = getTimer();
@@ -96,7 +98,7 @@ public class Ball extends Sprite {
     }
 
     // Обработка смены кадра для чужих шаров
-    public function enemyBallEnterFrame(event:Event):void {
+    public function enemyBallTick():void {
         if (!scene.gameIsOver) {
             RandomMove();
         }
@@ -147,7 +149,7 @@ public class Ball extends Sprite {
     }
 
     // Обработка смены кадра для пользовательского шара
-    public function userBallEnterFrame(event:Event):void {
+    public function userBallTick():void {
          this.Move();
     }
 
@@ -180,26 +182,14 @@ public class Ball extends Sprite {
             }
         }
 
+        // Перерисовка
         this.graphics.clear();
         this.graphics.beginFill(this.color);
         this.graphics.drawCircle(this.radius, this.radius, this.radius);
         this.graphics.endFill();
-        this.PhysicCalculate(this.power);
 
-        // Завершение игры
-        if (smallBall.isPlayer) {
-            scene.GameOver("Вы проиграли! Вас уничтожили!");
-        }
-        else {
-            if (Math.PI * Math.pow(this.radius, 2) > 0.5 * scene.totalArea) {
-                if (this.isPlayer == true) {
-                    scene.GameOver("Вы победили! Ваша площадь больше суммы других!");
-                }
-                else {
-                    scene.GameOver("Вы проиграли! Площадь одного из соперников больше суммы остальных!");
-                }
-            }
-        }
+        // Пересчет физики
+        this.PhysicCalculate(this.power);
     }
 
     // Определяет позицию нового шара

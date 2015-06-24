@@ -4,15 +4,24 @@
 package classes {
 import flash.display.Shape;
 import flash.display.Sprite;
+import flash.display.StageScaleMode;
 import flash.events.Event;
+import flash.events.MouseEvent;
+import flash.events.TimerEvent;
+import flash.utils.Timer;
+import flash.utils.setInterval;
+import flash.utils.setTimeout;
 
 // Класс игрового поля
 public class Playfield extends Sprite {
+    // Таймер
+    private var currentTimer: Number;
+
     private var xSize: Number;
     private var ySize: Number;
     private var color: uint;
     private var minimalRadius: Number;
-    public var workPlace: Sprite;
+    public var workPlace: Main;
     public var balls: Array = new Array();
     public var gameIsOver: Boolean = false;
 
@@ -24,7 +33,13 @@ public class Playfield extends Sprite {
     public var enemyBallColor1: uint;
     public var enemyBallColor2: uint;
 
-    public function Playfield(workPlace: Sprite, width: Number = 500, height: Number = 400, color: uint = 0xAFEEEE) {
+    // Шар пользователя
+    public var userBall: Ball;
+
+    // Количество кадров в секунду
+    public var fps:int = 30;
+
+    public function Playfield(workPlace: Main, width: Number = 500, height: Number = 400, color: uint = 0xAFEEEE) {
         this.workPlace = workPlace;
         this.xSize = width;
         this.ySize = height;
@@ -33,13 +48,42 @@ public class Playfield extends Sprite {
         this.color = color;
         this.totalArea = 0;
         Draw2d();
+
+        var userBallRadius: Number = 15;
+        var userBallX: Number = 20;
+        var userBallY: Number = 20;
+        userBall = new Ball(this, true, userBallRadius, userBallX, userBallY);
+
+        // Подписка на события
+        stage.scaleMode = StageScaleMode.NO_SCALE;
+        stage.addEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
+        stage.addEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
+        stage.addEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
+
         DrawGrid();
-        workPlace.addEventListener(PlayfieldEvent.GAME_STARTED, this.StartGame);
+        //StartGame();
+        setInterval(newTick, 1000 / fps);
     }
 
+   // var timer:Timer = new Timer(100);
+
     // Обработка события "Начало игры"
-    public function StartGame(e:PlayfieldEvent): void {
-        this.addEventListener(Event.ENTER_FRAME, enterFrame);
+    public function StartGame(): void {
+      // setInterval(newTick, 10);
+    }
+
+    // Устанавливает значения из конфига
+    public function SetConfigData(data:Object): void {
+        this.setUserBallColor = data.user.color.r * 256 * 256 + data.user.color.g * 256 + data.user.color.b;
+        this.enemyBallColor1 = data.enemy.color1.r * 256 * 256 + data.enemy.color1.g * 256 + data.enemy.color1.b;
+        this.enemyBallColor2 = data.enemy.color2.r * 256 * 256 + data.enemy.color2.g * 256 + data.enemy.color2.b;
+        var startEnemyCount: Number = data.enemyCount;
+        for(var i: int = 0; i < startEnemyCount; i++ ) {
+            new Ball(this, false);
+        }
+        for (var k:int = 1; k < this.balls.length; k++) {
+            this.GenerateEnemyColorRGB(this.balls[k]);
+        }
     }
 
     // Рисование двумерного поля
@@ -55,9 +99,28 @@ public class Playfield extends Sprite {
     private function DeleteBall(smallBall: Ball, bigBall: Ball, ind: int): void
     {
         bigBall.Increase(smallBall);
-        smallBall.removeEventListener(Event.ENTER_FRAME, smallBall.enemyBallEnterFrame);
+        //smallBall.removeEventListener(Event.ENTER_FRAME, smallBall.enemyBallEnterFrame);
         this.removeChild(smallBall);
         this.balls.splice(ind, 1);
+
+        CheckEndGame(smallBall, bigBall);
+    }
+
+    function CheckEndGame(smallBall: Ball, bigBall: Ball): void {
+        // Проверка окончания
+        if (smallBall.isPlayer) {
+            this.GameOver("Вы проиграли! Вас уничтожили!");
+        }
+        else {
+            if (Math.PI * Math.pow(bigBall.radius, 2) > 0.5 * this.totalArea) {
+                if (bigBall.isPlayer == true) {
+                    this.GameOver("Вы победили! Ваша площадь больше суммы других!");
+                }
+                else {
+                    this.GameOver("Вы проиграли! Площадь одного из соперников больше суммы остальных!");
+                }
+            }
+        }
     }
 
     // Получение минимального радиуса
@@ -92,13 +155,12 @@ public class Playfield extends Sprite {
                     for (var k:int = 0; k < this.balls.length; k++) {
                         GenerateEnemyColorRGB(balls[k]);
                     }
-
                     GetMinRadius();
                 }
             }
         }
 
-        if(balls[0].radius == this.minimalRadius)
+        if(balls[0].radius == this.minimalRadius && balls[0].isPlayer)
         {
             this.GameOver("Вы проиграли! Ваш радиус наименьший!");
         }
@@ -132,7 +194,15 @@ public class Playfield extends Sprite {
     }
 
     // Обработка смены кадра для поля
-    function enterFrame(event:Event):void {
+    function newTick():void {
+        for(var i:int = 0; i< balls.length; i++){
+            if (balls[i].isPlayer){
+                balls[i].userBallTick();
+            }
+            else {
+                balls[i].enemyBallTick();
+            }
+        }
         this.CheckIntersect();
 
         // Отображение пути пользовательского шара
@@ -225,8 +295,6 @@ public class Playfield extends Sprite {
         return 1;
     }
 
-
-    public var endGameMessage: String;
     // Завершение игры
     public function GameOver(alertMessage: String): void
     {
@@ -234,9 +302,12 @@ public class Playfield extends Sprite {
             GenerateEnemyColorRGB(balls[k]);
         }
         this.gameIsOver = true;
+        workPlace.FinishGame(alertMessage);
 
-        endGameMessage = alertMessage;
-        this.dispatchEvent(new PlayfieldEvent(PlayfieldEvent.GAME_FINISHED));
+        // Отписка от событий
+        stage.removeEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
+        stage.removeEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
+        stage.removeEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
     }
 
     // Очистка поля
