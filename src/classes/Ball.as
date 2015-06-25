@@ -28,6 +28,9 @@ public class Ball extends Sprite {
     private var power: Number = 0;
     private var colorBall: uint;
 
+    var newX: Number;
+    var newY: Number;
+
   // private var acceleration: Number;
 
     // Установка цвета шара
@@ -70,18 +73,19 @@ public class Ball extends Sprite {
         if (isPlayer == false) {
             this.radius = Math.random() * 15 + 5;
             DefinePosition();
-           // setInterval(this.enemyBallTick, 1000 / scene.fps);
         }
         else {
             this.radius = radius;
             this.centerX = posX;
             this.centerY = posY;
             this.color = color;
-            //setInterval(this.userBallTick, 1000 / scene.fps);
         }
 
         this.startTime = getTimer();
         this.startDelay = 3000;
+
+        newX = this.centerX;
+        newY = this.centerY;
 
         PhysicCalculate(0);
         Draw2d();
@@ -97,16 +101,13 @@ public class Ball extends Sprite {
         this.speed = this.power / this.weight;
     }
 
-    // Обработка смены кадра для чужих шаров
-    public function enemyBallTick():void {
-        if (!scene.gameIsOver) {
-            RandomMove();
+    // Пересчет координат
+    public function CalculateCoordinates(): void{
+        if(!this.isPlayer)
+        {
+            this.RandomMove();
         }
-    }
 
-    // Перемещение шара на заданное расстояние по 2 осям, если это возможно.
-    // Если перемещение выходит за рамки поля, возвращает False
-    private function Move(): void{
         if (this.power >= this.frictionPower) {
             this.power -= this.frictionPower;
         }
@@ -122,9 +123,9 @@ public class Ball extends Sprite {
             speedX = speed * Math.cos(this.angle);
             speedY = speed * Math.sin(this.angle);
         }
-        if (this.InField(this.centerX + speedX, this.centerY + speedY)){
-            this.centerX += speedX;
-            this.centerY += speedY;
+        if (this.InField(this.newX + speedX, this.newY + speedY)){
+            this.newX += speedX;
+            this.newY += speedY;
         }
         else
         {
@@ -134,7 +135,7 @@ public class Ball extends Sprite {
             // Минимальный коэффициент затухания
             var minDamping: Number = 0.8;
 
-            if (this.centerX - this.radius + speedX < 0 || this.centerX + speedX + this.radius > this.scene.SizeX)
+            if (this.newX - this.radius + speedX < 0 || this.newX + speedX + this.radius > this.scene.SizeX)
             {
                 this.angle = Math.PI - this.angle;
                 damping = Math.abs(Math.sin(this.angle)) * (1 - minDamping) + minDamping;
@@ -148,9 +149,13 @@ public class Ball extends Sprite {
         }
     }
 
-    // Обработка смены кадра для пользовательского шара
-    public function userBallTick():void {
-         this.Move();
+    // Перерисовка шара с заданным сглаживанием
+    public function Move(interpolation: Number): void{
+        var speedX: Number = speed * Math.cos(this.angle);
+        var speedY: Number = speed * Math.sin(this.angle);
+
+        this.centerX = newX + speedX * interpolation;
+        this.centerY = newY + speedY * interpolation;
     }
 
     // Рисование двумерного шара
@@ -231,7 +236,6 @@ public class Ball extends Sprite {
             this.angle = (Math.random() * 360 + 180) / 180 * Math.PI;
             PhysicCalculate(Math.random() * PowerKoef * this.radius);
         }
-        this.Move();
     }
 
     // Время начала нажатия мыши

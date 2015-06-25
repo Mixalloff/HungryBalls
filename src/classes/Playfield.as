@@ -9,6 +9,7 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.utils.Timer;
+import flash.utils.getTimer;
 import flash.utils.setInterval;
 import flash.utils.setTimeout;
 
@@ -36,8 +37,14 @@ public class Playfield extends Sprite {
     // Шар пользователя
     public var userBall: Ball;
 
-    // Количество кадров в секунду
-    public var fps:int = 30;
+    var timer:Timer;
+
+    // Количество тиков в секунду
+    const TICKS_PER_SECOND:int = 25;
+    const TICK_DELAY: Number = 1000 / TICKS_PER_SECOND;
+    const MAX_DELAY: int = 5;
+
+    private var next_game_tick: int = getTimer();
 
     public function Playfield(workPlace: Main, width: Number = 500, height: Number = 400, color: uint = 0xAFEEEE) {
         this.workPlace = workPlace;
@@ -61,15 +68,11 @@ public class Playfield extends Sprite {
         stage.addEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
 
         DrawGrid();
-        //StartGame();
-        setInterval(newTick, 1000 / fps);
-    }
 
-   // var timer:Timer = new Timer(100);
-
-    // Обработка события "Начало игры"
-    public function StartGame(): void {
-      // setInterval(newTick, 10);
+        // Подписка на событие таймера
+        timer = new Timer(1);
+        timer.addEventListener(TimerEvent.TIMER, this.newTick);
+        timer.start();
     }
 
     // Устанавливает значения из конфига
@@ -193,26 +196,28 @@ public class Playfield extends Sprite {
         }
     }
 
-    // Обработка смены кадра для поля
-    function newTick():void {
-        for(var i:int = 0; i< balls.length; i++){
-            if (balls[i].isPlayer){
-                balls[i].userBallTick();
-            }
-            else {
-                balls[i].enemyBallTick();
-            }
-        }
-        this.CheckIntersect();
+    // Обработка тика для поля
+    public function newTick(e: TimerEvent):void {
+            // Текущее количество прошедших циклов
+            var loops: int = 0;
 
-        // Отображение пути пользовательского шара
-        /*if (balls[0] != null) {
-            var square:Shape = new Shape();
-            square.graphics.beginFill(0x000000);
-            square.graphics.drawCircle(balls[0].centerX, balls[0].centerY, 1);
-            square.graphics.endFill();
-            this.addChild(square);
-        }*/
+            // Сглаживание разницы реальной позиции и отрисованного элемента
+            var interpolation: Number;
+
+            while (getTimer() > next_game_tick && loops < MAX_DELAY) {
+                // Изменение координат установленное количество раз в секунду
+                for (var i:int = 0; i < balls.length; i++) {
+                    balls[i].CalculateCoordinates();
+                }
+                next_game_tick += TICK_DELAY;
+                loops++;
+                this.CheckIntersect();
+            }
+            interpolation = (getTimer() + TICK_DELAY - next_game_tick) / TICK_DELAY;
+            // Отрисовка в соответствии с текущим FPS
+            for (var j:int = 0; j < balls.length; j++) {
+                balls[j].Move(interpolation);
+            }
     }
 
     // Добавление шара в массив
@@ -223,7 +228,6 @@ public class Playfield extends Sprite {
         {
             ball.color = userBallColor;
         }
-
         GetMinRadius();
     }
 
@@ -303,11 +307,13 @@ public class Playfield extends Sprite {
         }
         this.gameIsOver = true;
         workPlace.FinishGame(alertMessage);
+        timer.stop();
 
         // Отписка от событий
         stage.removeEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
         stage.removeEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
         stage.removeEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
+        timer.removeEventListener(TimerEvent.TIMER, this.newTick);
     }
 
     // Очистка поля
