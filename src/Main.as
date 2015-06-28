@@ -1,9 +1,18 @@
 package {
 
 import classes.Playfield;
+
+import flash.display.Bitmap;
+
+import flash.display.BitmapData;
+
+import flash.display.Loader;
+import flash.display.Shape;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.geom.Matrix;
+import flash.geom.Point;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
 import flash.text.TextField;
@@ -16,17 +25,40 @@ public class Main extends Sprite {
  //   public var userBall: Ball;
     public var startEnemyCount: Number;
 
+    public static const ResourcesPath: String = "../../../Resources";
+
     // Файл конфига
     const CONFIG_URL:String = "gameConfig.json";
+
 
     // Данные конфига
     var configData: Object = new Object();
 
     public function Main() {
-        // stage.color = 0x000000;
+        stage.color = 0x000000;
 
+        LoadBackground();
         // Загрузка конфига
         getJson(CONFIG_URL);
+    }
+
+    private var backgroundUrl:String = ResourcesPath + "/Images/background.jpg";
+    private var loader:Loader = new Loader();
+    
+    public function LoadBackground(): void {
+        var request:URLRequest = new URLRequest(backgroundUrl);
+        loader.load(request);
+        loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
+    }
+
+    private function loadComplete(event:Event):void {
+        var myBitmap:BitmapData = new BitmapData(loader.width, loader.height, true);
+
+        var myImage:Bitmap = new Bitmap(myBitmap);
+        stage.addChildAt(myImage, 0);
+        myImage.x = -450;
+        myImage.y = -200;
+        myBitmap.draw(loader, new Matrix());
     }
 
     // Завершение игры

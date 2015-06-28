@@ -4,7 +4,9 @@
     <list default="true" id="2b61fc7a-b7fc-4d5a-9aca-2070592a99e8" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Game/Main.swf" afterPath="$PROJECT_DIR$/out/production/Game/Main.swf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/classes/Ball.as" afterPath="$PROJECT_DIR$/src/classes/Ball.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.as" afterPath="$PROJECT_DIR$/src/Main.as" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/classes/Playfield.as" afterPath="$PROJECT_DIR$/src/classes/Playfield.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Game.iws" />
@@ -28,14 +30,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Main.as" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Main.as" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="121" column="0" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+            <state vertical-scroll-proportion="-0.21106558">
+              <caret line="46" column="4" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="4" />
               <folding>
                 <element signature="e#11#36#0" expanded="true" />
-                <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+                <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -45,32 +47,34 @@
         <entry file="file://$PROJECT_DIR$/src/classes/Ball.as">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
+              <caret line="223" column="52" selection-start-line="223" selection-start-column="52" selection-end-line="223" selection-end-column="52" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#61#89#0" expanded="true" />
-                <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
                 <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
                 <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
                 <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
                 <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
                 <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+                <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+                <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
                 <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-                <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
                 <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Playfield.as" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Playfield.as" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/classes/Playfield.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5389344">
-              <caret line="42" column="26" selection-start-line="42" selection-start-column="10" selection-end-line="42" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#61#88#0" expanded="true" />
+                <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+                <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
                 <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
               </folding>
             </state>
@@ -102,9 +106,9 @@
         <option value="$PROJECT_DIR$/src/classes/PlayfieldEvents.as" />
         <option value="$PROJECT_DIR$/src/classes/DispatchEvent.as" />
         <option value="$PROJECT_DIR$/src/classes/PlayfieldEvent.as" />
-        <option value="$PROJECT_DIR$/src/Main.as" />
-        <option value="$PROJECT_DIR$/src/classes/Playfield.as" />
         <option value="$PROJECT_DIR$/src/classes/Ball.as" />
+        <option value="$PROJECT_DIR$/src/classes/Playfield.as" />
+        <option value="$PROJECT_DIR$/src/Main.as" />
       </list>
     </option>
   </component>
@@ -112,11 +116,18 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Bundled (Maven 3)" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="NamedScopeManager">
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1419" />
+    <option name="x" value="53" />
     <option name="y" value="24" />
     <option name="width" value="1313" />
     <option name="height" value="744" />
@@ -145,6 +156,8 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -197,8 +210,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -529,15 +540,20 @@
       <workItem from="1435051651575" duration="1909000" />
       <workItem from="1435148373717" duration="11024000" />
       <workItem from="1435214979759" duration="3970000" />
-      <workItem from="1435220513649" duration="4095000" />
+      <workItem from="1435220513649" duration="5561000" />
+      <workItem from="1435243264111" duration="1158000" />
+      <workItem from="1435396311804" duration="1098000" />
+      <workItem from="1435402117304" duration="14217000" />
+      <workItem from="1435482195946" duration="599000" />
+      <workItem from="1435487123890" duration="2539000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="176836000" />
+    <option name="totallyTimeSpent" value="197913000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1419" y="24" width="1313" height="744" extended-state="6" />
+    <frame x="53" y="24" width="1313" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -547,11 +563,11 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33383012" sideWeight="0.25971058" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22801788" sideWeight="0.6100533" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33383012" sideWeight="0.24904798" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22801788" sideWeight="0.8248286" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22801788" sideWeight="0.3899467" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22801788" sideWeight="0.17517136" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -562,8 +578,8 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.49733436" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -579,7 +595,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="131" />
+      <option name="time" value="140" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -595,14 +611,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -615,6 +631,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -624,7 +642,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4262" column="41" selection-start-line="4262" selection-start-column="41" selection-end-line="4262" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -634,7 +651,7 @@
           <caret line="132" column="23" selection-start-line="132" selection-start-column="18" selection-end-line="132" selection-end-column="23" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -646,14 +663,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -666,6 +683,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -677,7 +696,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -689,14 +708,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -709,6 +728,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -720,7 +741,7 @@
           <caret line="33" column="28" selection-start-line="33" selection-start-column="28" selection-end-line="33" selection-end-column="28" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -729,7 +750,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4970" column="41" selection-start-line="4970" selection-start-column="34" selection-end-line="4970" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -740,14 +760,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -760,6 +780,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -771,7 +793,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -780,7 +802,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4970" column="41" selection-start-line="4970" selection-start-column="34" selection-end-line="4970" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -791,14 +812,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -811,6 +832,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -822,7 +845,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -831,7 +854,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1646" column="52" selection-start-line="1646" selection-start-column="52" selection-end-line="1646" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -842,14 +864,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -862,6 +884,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -873,7 +897,7 @@
           <caret line="23" column="46" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -885,14 +909,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -905,6 +929,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -916,7 +942,7 @@
           <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -928,14 +954,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -948,6 +974,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -959,7 +987,7 @@
           <caret line="33" column="56" selection-start-line="33" selection-start-column="56" selection-end-line="33" selection-end-column="56" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -971,14 +999,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -991,6 +1019,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -1002,7 +1032,7 @@
           <caret line="27" column="72" selection-start-line="27" selection-start-column="72" selection-end-line="27" selection-end-column="72" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1014,14 +1044,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -1034,6 +1064,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -1045,7 +1077,7 @@
           <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1057,14 +1089,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -1077,6 +1109,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -1088,7 +1122,7 @@
           <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
           <folding>
             <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1100,14 +1134,14 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -1120,6 +1154,8 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -1185,36 +1221,24 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1912" column="47" selection-start-line="1912" selection-start-column="47" selection-end-line="1912" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="121" column="0" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
-          <folding>
-            <element signature="e#11#36#0" expanded="true" />
-            <element signature="n#!!block;n#Main#0;n#Main#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/classes/Ball.as">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
+          <caret line="223" column="52" selection-start-line="223" selection-start-column="52" selection-end-line="223" selection-end-column="52" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#89#0" expanded="true" />
-            <element signature="n#!!block;n#color#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#color#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerX#1;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#centerY#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#PhysicCalculate#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Draw2d#0;n#Ball#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#Increase#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#DefinePosition#0;n#Ball#0;n#classes#0" expanded="false" />
-            <element signature="n#!!block;n#InField#0;n#Ball#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#CalculateAngle#0;n#Ball#0;n#classes#0" expanded="false" />
           </folding>
         </state>
@@ -1222,12 +1246,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/classes/Playfield.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5389344">
-          <caret line="42" column="26" selection-start-line="42" selection-start-column="10" selection-end-line="42" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#61#88#0" expanded="true" />
+            <element signature="n#!!block;n#addBall#0;n#Playfield#0;n#classes#0" expanded="false" />
+            <element signature="n#!!block;n#HexToRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
             <element signature="n#!!block;n#GenerateEnemyColorRGB#0;n#Playfield#0;n#classes#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Main.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.21106558">
+          <caret line="46" column="4" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="4" />
+          <folding>
+            <element signature="e#11#36#0" expanded="true" />
+            <element signature="n#!!block;n#ShowEndGameWindow#0;n#Main#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>

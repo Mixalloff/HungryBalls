@@ -28,8 +28,8 @@ public class Ball extends Sprite {
     private var power: Number = 0;
     private var colorBall: uint;
 
-    var newX: Number;
-    var newY: Number;
+    private var targetX: Number;
+    private var targetY: Number;
 
   // private var acceleration: Number;
 
@@ -84,8 +84,8 @@ public class Ball extends Sprite {
         this.startTime = getTimer();
         this.startDelay = 3000;
 
-        newX = this.centerX;
-        newY = this.centerY;
+        this.targetX = this.centerX;
+        this.targetY = this.centerY;
 
         PhysicCalculate(0);
         Draw2d();
@@ -123,9 +123,9 @@ public class Ball extends Sprite {
             speedX = speed * Math.cos(this.angle);
             speedY = speed * Math.sin(this.angle);
         }
-        if (this.InField(this.newX + speedX, this.newY + speedY)){
-            this.newX += speedX;
-            this.newY += speedY;
+        if (this.InField(this.targetX + speedX, this.targetY + speedY)){
+            this.targetX += speedX;
+            this.targetY += speedY;
         }
         else
         {
@@ -135,7 +135,7 @@ public class Ball extends Sprite {
             // Минимальный коэффициент затухания
             var minDamping: Number = 0.8;
 
-            if (this.newX - this.radius + speedX < 0 || this.newX + speedX + this.radius > this.scene.SizeX)
+            if (this.targetX - this.radius + speedX < 0 || this.targetX + speedX + this.radius > this.scene.SizeX)
             {
                 this.angle = Math.PI - this.angle;
                 damping = Math.abs(Math.sin(this.angle)) * (1 - minDamping) + minDamping;
@@ -154,8 +154,8 @@ public class Ball extends Sprite {
         var speedX: Number = speed * Math.cos(this.angle);
         var speedY: Number = speed * Math.sin(this.angle);
 
-        this.centerX = newX + speedX * interpolation;
-        this.centerY = newY + speedY * interpolation;
+        this.centerX = targetX + speedX * interpolation;
+        this.centerY = targetY + speedY * interpolation;
     }
 
     // Рисование двумерного шара
@@ -169,6 +169,8 @@ public class Ball extends Sprite {
 
     // Увеличение шара
     public function Increase(smallBall: Ball): void{
+        scene.increaseSnd.play(250);
+
         this.radius = Math.sqrt(Math.pow(this.radius, 2) + Math.pow(smallBall.radius, 2));
 
         if (!this.InField(this.centerX, centerY))
@@ -195,6 +197,7 @@ public class Ball extends Sprite {
 
         // Пересчет физики
         this.PhysicCalculate(this.power);
+
     }
 
     // Определяет позицию нового шара
