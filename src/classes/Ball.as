@@ -176,13 +176,13 @@ public class Ball extends Sprite {
         if (!this.InField(this.centerX, centerY))
         {
             if (centerX + this.radius > this.scene.SizeX){
-                centerX -= centerX + this.radius - this.scene.SizeX;
+                centerX -= centerX + this.radius - (this.scene.SizeX - this.scene.x);
             }
             if (centerX - this.radius < 0){
                 centerX -= centerX - this.radius;
             }
             if (centerY + this.radius > this.scene.SizeY){
-                centerY -= centerY + this.radius - this.scene.SizeY;
+                centerY -= centerY + this.radius - (this.scene.SizeY - this.scene.y);
             }
             if (centerY - this.radius < 0){
                 centerY -= centerY - this.radius;
@@ -221,14 +221,10 @@ public class Ball extends Sprite {
 
     // Проверяет, находится ли шар в пределах поля
     private function InField(posX: Number, posY: Number): Boolean {
-        if (posX + this.radius > this.scene.SizeX ||
+        return !(posX + this.radius > this.scene.SizeX ||
                 posX - this.radius < 0 ||
                 posY + this.radius > this.scene.SizeY ||
-                posY - this.radius < 0)
-        {
-            return false;
-        }
-        return true;
+                posY - this.radius < 0);
     }
 
     // Генерирует случайные параметры для передвижения

@@ -1,18 +1,13 @@
 package {
 
 import classes.Playfield;
-
 import flash.display.Bitmap;
-
 import flash.display.BitmapData;
-
 import flash.display.Loader;
-import flash.display.Shape;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Matrix;
-import flash.geom.Point;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
 import flash.text.TextField;
@@ -22,8 +17,6 @@ import flashx.textLayout.formats.TextAlign;
 
 public class Main extends Sprite {
     public var newScene: Playfield;
- //   public var userBall: Ball;
-    public var startEnemyCount: Number;
 
     public static const ResourcesPath: String = "../../../Resources";
 
@@ -35,7 +28,7 @@ public class Main extends Sprite {
     var configData: Object = new Object();
 
     public function Main() {
-        stage.color = 0x000000;
+       // stage.color = 0x000000;
 
         LoadBackground();
         // Загрузка конфига
@@ -44,7 +37,7 @@ public class Main extends Sprite {
 
     private var backgroundUrl:String = ResourcesPath + "/Images/background.jpg";
     private var loader:Loader = new Loader();
-    
+
     public function LoadBackground(): void {
         var request:URLRequest = new URLRequest(backgroundUrl);
         loader.load(request);
@@ -62,13 +55,13 @@ public class Main extends Sprite {
     }
 
     // Завершение игры
-    public function FinishGame(endGameMessage: String): void {
-        trace("game is finished!");
-        ShowEndGameWindow(endGameMessage);
-    }
+    //public function FinishGame(endGameMessage: String): void {
+      //  trace("game is finished!");
+      //  ShowEndGameWindow(endGameMessage);
+   // }
 
     // Открытие окна окончания игры
-    function ShowEndGameWindow(text: String): void {
+    public function ShowEndGameWindow(text: String): void {
         var win: Sprite = new Sprite();
         var infoText: TextField = new TextField();
         var winBtn: Sprite = new Sprite();
@@ -102,7 +95,7 @@ public class Main extends Sprite {
 
         // Параметры текста кнопки
         var btnTextFormat: TextFormat = new TextFormat();
-        btnTextFormat.size = 22;//btnTextFormat.aut
+        btnTextFormat.size = 22;
         btnTextFormat.align = TextAlign.CENTER;
         btnTextFormat.color = 0xffffff;
         btnText.text = "Рестарт!";

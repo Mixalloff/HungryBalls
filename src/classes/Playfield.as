@@ -325,7 +325,7 @@ public class Playfield extends Sprite {
             GenerateEnemyColorRGB(balls[k]);
         }
         this.gameIsOver = true;
-        workPlace.FinishGame(alertMessage);
+        workPlace.ShowEndGameWindow(alertMessage);
         timer.stop();
 
         // Отписка от событий
