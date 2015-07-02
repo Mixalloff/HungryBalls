@@ -31,7 +31,7 @@ public class Playfield extends Sprite {
     public var enemyBallColor2: uint;
 
     // Шар пользователя
-    public var userBall: Ball;
+    public var userBall: UserBall;
 
     var timer:Timer;
 
@@ -59,11 +59,11 @@ public class Playfield extends Sprite {
         var userBallRadius: Number = 15;
         var userBallX: Number = 20;
         var userBallY: Number = 20;
-        userBall = new Ball(this, true, userBallRadius, userBallX, userBallY);
+        userBall = new UserBall(this, userBallRadius, userBallX, userBallY);
 
         // Подписка на события
         workPlace.stage.scaleMode = StageScaleMode.NO_SCALE;
-        workPlace.stage.addEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
+       // workPlace.stage.addEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
         workPlace.stage.addEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
         workPlace.stage.addEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
         Draw2d();
@@ -78,7 +78,7 @@ public class Playfield extends Sprite {
         this.enemyBallColor2 = data.enemy.color2.r * 256 * 256 + data.enemy.color2.g * 256 + data.enemy.color2.b;
         var startEnemyCount: Number = data.enemyCount;
         for(var i: int = 0; i < startEnemyCount; i++ ) {
-            new Ball(this, false);
+            new EnemyBall(this);
         }
         for (var k:int = 1; k < this.balls.length; k++) {
             this.GenerateEnemyColorRGB(this.balls[k]);
@@ -89,12 +89,12 @@ public class Playfield extends Sprite {
 
     public function Start(): void {
         // Подписка на событие таймера
-        timer = new Timer(1);
+        timer = new Timer(TICK_DELAY);
         timer.addEventListener(TimerEvent.TIMER, this.newTick);
         timer.start();
     }
 
-    public const fieldThickness: Number = 5;
+    public const fieldThickness: Number = 2;
 
     // Рисование двумерного поля
     private function Draw2d(): void {
@@ -123,12 +123,12 @@ public class Playfield extends Sprite {
 
     function CheckEndGame(smallBall: Ball, bigBall: Ball): void {
         // Проверка окончания
-        if (smallBall.isPlayer) {
+        if (smallBall is UserBall) {
             this.GameOver("Вы проиграли! Вас уничтожили!", false);
         }
         else {
             if (Math.PI * Math.pow(bigBall.radius, 2) > 0.5 * this.totalArea) {
-                if (bigBall.isPlayer == true) {
+                if (bigBall is UserBall) {
                     this.GameOver("Вы победили! Ваша площадь больше суммы других!", true);
                 }
                 else {
@@ -175,7 +175,7 @@ public class Playfield extends Sprite {
             }
         }
 
-        if(balls[0].radius == this.minimalRadius && balls[0].isPlayer)
+        if(balls[0].radius == this.minimalRadius && balls[0] is UserBall)
         {
             this.GameOver("Вы проиграли! Ваш радиус наименьший!", false);
         }
@@ -219,7 +219,7 @@ public class Playfield extends Sprite {
             while (getTimer() > next_game_tick && loops < MAX_DELAY) {
                 // Изменение координат установленное количество раз в секунду
                 for (var i:int = 0; i < balls.length; i++) {
-                    balls[i].CalculateCoordinates();
+                    balls[i].ChangeCoordinates();
                 }
                 next_game_tick += TICK_DELAY;
                 loops++;
@@ -236,7 +236,7 @@ public class Playfield extends Sprite {
     public function addBall(ball: Ball): void {
         this.balls[this.balls.length] = ball;
         totalArea += Math.PI * Math.pow(ball.radius, 2);
-        if (ball.isPlayer)
+        if (ball is UserBall)
         {
             ball.color = userBallColor;
         }
@@ -254,7 +254,7 @@ public class Playfield extends Sprite {
 
     // Генерация цвета из заданного интервала с учетом размеров
     public function GenerateEnemyColorRGB(ball: Ball): void{
-        if (!ball.isPlayer) {
+        if (ball is EnemyBall) {
             var enemyLowLimitColor:Object = HexToRGB(this.enemyBallColor1);
             var enemyHighLimitColor:Object = HexToRGB(this.enemyBallColor2);
 
@@ -329,7 +329,7 @@ public class Playfield extends Sprite {
         timer.stop();
 
         // Отписка от событий
-        stage.removeEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
+      //  stage.removeEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
         stage.removeEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
         stage.removeEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
         timer.removeEventListener(TimerEvent.TIMER, this.newTick);

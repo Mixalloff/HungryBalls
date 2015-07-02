@@ -29,8 +29,6 @@ public class Main extends Sprite {
 
     public function Main() {
        // stage.color = 0x000000;
-
-        LoadBackground();
         // Загрузка конфига
         getJson(CONFIG_URL);
     }
@@ -38,12 +36,14 @@ public class Main extends Sprite {
     private var backgroundUrl:String = ResourcesPath + "/Images/background.jpg";
     private var loader:Loader = new Loader();
 
+    // Загрузка фона
     public function LoadBackground(): void {
         var request:URLRequest = new URLRequest(backgroundUrl);
         loader.load(request);
         loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
     }
 
+    // Завершение загрузки фона. Старт первой игры
     private function loadComplete(event:Event):void {
         var myBitmap:BitmapData = new BitmapData(loader.width, loader.height, true);
 
@@ -52,13 +52,8 @@ public class Main extends Sprite {
         myImage.x = -450;
         myImage.y = -200;
         myBitmap.draw(loader, new Matrix());
+        StartNewGame();
     }
-
-    // Завершение игры
-    //public function FinishGame(endGameMessage: String): void {
-      //  trace("game is finished!");
-      //  ShowEndGameWindow(endGameMessage);
-   // }
 
     // Открытие окна окончания игры
     public function ShowEndGameWindow(text: String): void {
@@ -143,12 +138,12 @@ public class Main extends Sprite {
         trace("game is started!");
     }
 
-    // Установка параметров из конфига при завершении его загрузки. Начало первой игры
+    // Установка параметров из конфига при завершении его загрузки. Запуск загрузки фона
     private function onLoaderComplete(e:Event):void{
         var loader:URLLoader = URLLoader(e.target);
         var data:Object = com.adobe.serialization.json.JSON.decode(loader.data);
         this.configData = data;
-        StartNewGame();
+        LoadBackground();
     }
 
     // Получение JSON из файла-конфига
