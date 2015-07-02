@@ -14,8 +14,6 @@ public class EnemyBall extends Ball{
         DefinePosition();
         this.startTime = getTimer();
         this.startDelay = 3000;
-
-        scene.addBall(this);
     }
 
     // Определяет позицию нового шара
@@ -35,13 +33,11 @@ public class EnemyBall extends Ball{
                 }
             }
         }
-        this.targetX = this.centerX;
-        this.targetY = this.centerY;
     }
 
-    public function ChangeCoordinates(): void{
+    public override function Move(diff:Number): void{
         RandomMove();
-        CalculateCoordinates();
+        super.Move(diff);
     }
 
     public function RandomMove(): void{

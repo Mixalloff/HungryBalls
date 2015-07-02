@@ -18,7 +18,7 @@ public class Ball extends Sprite {
     public var radius: Number;
 
     // Физические характеристики
-    const gravAcceleration: Number = 9.8;
+    private const gravAcceleration: Number = 9.8;
     protected var angle: Number = 0;
     protected var frictionPower: Number = 0;
     protected var koefFriction: Number = 0.02;
@@ -28,8 +28,8 @@ public class Ball extends Sprite {
     protected var power: Number = 0;
     protected var colorBall: uint;
 
-    protected var targetX: Number;
-    protected var targetY: Number;
+    //protected var targetX: Number;
+    //protected var targetY: Number;
 
   // private var acceleration: Number;
 
@@ -46,24 +46,32 @@ public class Ball extends Sprite {
         return this.colorBall;
     }
 
+    // Более точные координаты шара, чем унаследованные X и Y
+    private var accurateX: Number;
+    private var accurateY: Number;
+
     // Получение X координаты шара
     public function get centerX(): Number{
-        return this.x + this.radius;
+        //return this.x + this.radius;
+        return this.accurateX + this.radius;
     }
 
     // Установка X координаты шара
     public function set centerX(posX: Number): void{
-        this.x = posX - this.radius;
+        this.accurateX = posX - this.radius;
+        this.x = this.accurateX;
     }
 
     // Получение Y координаты шара
     public function get centerY(): Number{
-        return this.y + this.radius;
+        //return this.y + this.radius;
+        return this.accurateY + this.radius;
     }
 
     // Установка Y координаты шара
     public function set centerY(posY: Number): void{
-        this.y = posY - this.radius;
+        this.accurateY = posY - this.radius;
+        this.y = this.accurateY;
     }
 
     // Конструктор
@@ -74,24 +82,9 @@ public class Ball extends Sprite {
         this.centerX = posX;
         this.centerY = posY;
         this.color = color;
-        //this.isPlayer = isPlayer;
 
-       /* if (isPlayer == false) {
-            this.radius = Math.random() * 15 + 5;
-            DefinePosition();
-        }
-        else {
-            this.radius = radius;
-            this.centerX = posX;
-            this.centerY = posY;
-            this.color = color;
-        }*/
-
-        //this.startTime = getTimer();
-        //this.startDelay = 3000;
-
-        this.targetX = this.centerX;
-        this.targetY = this.centerY;
+       // this.targetX = this.centerX;
+       // this.targetY = this.centerY;
 
         PhysicCalculate(0);
         Draw2d();
@@ -108,12 +101,7 @@ public class Ball extends Sprite {
     }
 
     // Пересчет координат
-    public function CalculateCoordinates(): void{
-        /*if(!this.isPlayer)
-        {
-            this.RandomMove();
-        }*/
-
+    public function Move(diff: Number): void{
         if (this.power >= this.frictionPower) {
             this.power -= this.frictionPower;
         }
@@ -122,16 +110,16 @@ public class Ball extends Sprite {
             this.power = 0;
         }
         this.speed = this.power / this.weight;
-        var speedX: Number = speed * Math.cos(this.angle);
-        var speedY: Number = speed * Math.sin(this.angle);
+        var speedX: Number = speed * Math.cos(this.angle) * diff;
+        var speedY: Number = speed * Math.sin(this.angle)* diff;
         while(speedX > 2 * this.radius || speedY > 2 * this.radius){
             this.PhysicCalculate(power * 0.9);
             speedX = speed * Math.cos(this.angle);
             speedY = speed * Math.sin(this.angle);
         }
-        if (this.InField(this.targetX + speedX, this.targetY + speedY)){
-            this.targetX += speedX;
-            this.targetY += speedY;
+        if (this.InField(this.centerX + speedX, this.centerY + speedY)){
+            this.centerX += speedX;
+            this.centerY += speedY;
         }
         else
         {
@@ -141,7 +129,7 @@ public class Ball extends Sprite {
             // Минимальный коэффициент затухания
             var minDamping: Number = 0.8;
 
-            if (this.targetX - this.radius + speedX < 0 || this.targetX + speedX + this.radius > this.scene.SizeX)
+            if (this.centerX - this.radius + speedX < 0 || this.centerX + speedX + this.radius > this.scene.SizeX)
             {
                 this.angle = Math.PI - this.angle;
                 damping = Math.abs(Math.sin(this.angle)) * (1 - minDamping) + minDamping;
@@ -156,13 +144,13 @@ public class Ball extends Sprite {
     }
 
     // Перерисовка шара с заданным сглаживанием
-    public function Move(interpolation: Number): void{
+    /*public function Move(): void{
         var speedX: Number = speed * Math.cos(this.angle);
         var speedY: Number = speed * Math.sin(this.angle);
 
-        this.centerX = targetX + speedX * interpolation;
-        this.centerY = targetY + speedY * interpolation;
-    }
+        this.centerX = targetX + speedX;
+        this.centerY = targetY + speedY;
+    }*/
 
     // Рисование двумерного шара
     protected function Draw2d():void {
@@ -170,12 +158,12 @@ public class Ball extends Sprite {
         this.graphics.drawCircle(this.radius, this.radius, this.radius);
         this.graphics.endFill();
 
-        scene.addChild(this);
+    //    scene.addChild(this);
     }
 
     // Увеличение шара
     public function Increase(smallBall: Ball): void{
-        scene.increaseSnd.play(250);
+        scene.workPlace.loader.sounds.increaseSnd.play(250);
 
         this.radius = Math.sqrt(Math.pow(this.radius, 2) + Math.pow(smallBall.radius, 2));
 
@@ -206,25 +194,6 @@ public class Ball extends Sprite {
 
     }
 
-    // Определяет позицию нового шара
-   /* private function DefinePosition():void {
-        var flag:Boolean = false;
-        while (!flag) {
-            flag = true;
-            this.centerX = Math.random() * (scene.SizeX - 2 * this.radius) + this.radius;
-            this.centerY = Math.random() * (scene.SizeY - 2 * this.radius) + this.radius;
-
-            if (this.InField(this.centerX, this.centerY)) {
-                for (var i:int = 0; i < scene.balls.length; i++) {
-                    if(scene.IsIntersects(this, scene.balls[i]))
-                    {
-                        flag = false;
-                    }
-                }
-            }
-        }
-    }*/
-
     // Проверяет, находится ли шар в пределах поля
     protected function InField(posX: Number, posY: Number): Boolean {
         return !(posX + this.radius > this.scene.SizeX ||
@@ -232,40 +201,5 @@ public class Ball extends Sprite {
                 posY + this.radius > this.scene.SizeY ||
                 posY - this.radius < 0);
     }
-
-    // Генерирует случайные параметры для передвижения
-    /*public function RandomMove(): void{
-        var PowerKoef: Number = 200;
-
-        if (this.power == 0 && getTimer() - this.startTime > this.startDelay) {
-            this.angle = (Math.random() * 360 + 180) / 180 * Math.PI;
-            PhysicCalculate(Math.random() * PowerKoef * this.radius);
-        }
-    }*/
-
-    // Время начала нажатия мыши
-    //private var startMouseDownTime: int;
-
-    // Обработка начала нажатия мыши
-    /*public function StartMouseDown(event:MouseEvent): void {
-        this.startMouseDownTime = getTimer();
-    }*/
-
-    // Обработка отпускания мыши
-   /* public function EndMouseDown(event:MouseEvent): void {
-        this.power = (getTimer() - this.startMouseDownTime);
-        if(this.power > 1000)
-        {
-            this.power = 1000;
-        }
-        this.PhysicCalculate(power * this.radius);
-    }*/
-
-    // Обработка клика
-   /* public function CalculateAngle(event:MouseEvent): void{
-        var clickX: Number = event.stageX - this.radius;
-        var clickY: Number = event.stageY - this.radius;
-        this.angle = Math.atan2(this.centerY - clickY, this.centerX - clickX);
-    }*/
 }
 }

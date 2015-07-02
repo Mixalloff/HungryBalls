@@ -10,16 +10,7 @@ public class UserBall extends Ball{
     private var startMouseDownTime: int;
 
     public function UserBall(scene:Playfield, radius:Number = 0, posX:Number = 0, posY:Number = 0, color:uint = 0xff0000) {
-        /*this.radius = radius;
-        this.centerX = posX;
-        this.centerY = posY;
-        this.color = color;*/
         super(scene, radius, posX, posY, color);
-        scene.addBall(this);
-    }
-
-    public function ChangeCoordinates(): void{
-        CalculateCoordinates();
     }
 
     // Обработка начала нажатия мыши
@@ -45,6 +36,5 @@ public class UserBall extends Ball{
         var clickY: Number = posy - this.radius;
         this.angle = Math.atan2(this.centerY - clickY, this.centerX - clickX);
     }
-
 }
 }

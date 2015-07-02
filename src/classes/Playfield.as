@@ -19,7 +19,7 @@ public class Playfield extends Sprite {
     private var color: uint;
     private var minimalRadius: Number;
     public var workPlace: Main;
-    public var balls: Array = new Array();
+    public var balls: Array = [];
     public var gameIsOver: Boolean = false;
 
     // Общая площадь всех шаров
@@ -40,12 +40,12 @@ public class Playfield extends Sprite {
     const TICK_DELAY: Number = 1000 / TICKS_PER_SECOND;
     const MAX_DELAY: int = 5;
 
-    private var next_game_tick: int = getTimer();
+    private var lastGameTick: int = getTimer();
 
     // Звуки
-    public var increaseSnd:Sound = new Sound(new URLRequest(Main.ResourcesPath + "/Sounds/bubble.mp3"));
-    public var winSnd:Sound = new Sound(new URLRequest(Main.ResourcesPath + "/Sounds/win.mp3"));
-    public var loseSnd:Sound = new Sound(new URLRequest(Main.ResourcesPath + "/Sounds/lose.mp3"));
+    //public var increaseSnd:Sound = new Sound(new URLRequest(Main.ResourcesPath + "/Sounds/bubble.mp3"));
+    //public var winSnd:Sound = new Sound(new URLRequest(Main.ResourcesPath + "/Sounds/win.mp3"));
+    //public var loseSnd:Sound = new Sound(new URLRequest(Main.ResourcesPath + "/Sounds/lose.mp3"));
 
     public function Playfield(workPlace: Main, width: Number = 500, height: Number = 400, color: uint = 0xAFEEEE) {
         this.workPlace = workPlace;
@@ -56,35 +56,40 @@ public class Playfield extends Sprite {
         this.color = color;
         this.totalArea = 0;
 
-        var userBallRadius: Number = 15;
-        var userBallX: Number = 20;
-        var userBallY: Number = 20;
-        userBall = new UserBall(this, userBallRadius, userBallX, userBallY);
-
         // Подписка на события
         workPlace.stage.scaleMode = StageScaleMode.NO_SCALE;
-       // workPlace.stage.addEventListener(MouseEvent.CLICK, userBall.CalculateAngle);
-        workPlace.stage.addEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
-        workPlace.stage.addEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
-        Draw2d();
-        //DrawGrid();
 
+        Draw2d();
     }
 
     // Устанавливает значения из конфига
     public function SetConfigData(data:Object): void {
-        this.setUserBallColor = data.user.color.r * 256 * 256 + data.user.color.g * 256 + data.user.color.b;
         this.enemyBallColor1 = data.enemy.color1.r * 256 * 256 + data.enemy.color1.g * 256 + data.enemy.color1.b;
         this.enemyBallColor2 = data.enemy.color2.r * 256 * 256 + data.enemy.color2.g * 256 + data.enemy.color2.b;
         var startEnemyCount: Number = data.enemyCount;
+
+        CreateBalls(startEnemyCount);
+        this.setUserBallColor = data.user.color.r * 256 * 256 + data.user.color.g * 256 + data.user.color.b;
+
+        Start();
+    }
+
+    public function CreateBalls(startEnemyCount: Number): void{
+        this.totalArea = 0;
+        var userBallRadius: Number = 15;
+        var userBallX: Number = 20;
+        var userBallY: Number = 20;
+        userBall = new UserBall(this, userBallRadius, userBallX, userBallY);
+        this.addBall(userBall);
+        workPlace.stage.addEventListener(MouseEvent.MOUSE_DOWN, userBall.StartMouseDown);
+        workPlace.stage.addEventListener(MouseEvent.MOUSE_UP, userBall.EndMouseDown);
+
         for(var i: int = 0; i < startEnemyCount; i++ ) {
-            new EnemyBall(this);
+            addBall(new EnemyBall(this));
         }
         for (var k:int = 1; k < this.balls.length; k++) {
             this.GenerateEnemyColorRGB(this.balls[k]);
         }
-
-        Start();
     }
 
     public function Start(): void {
@@ -98,13 +103,6 @@ public class Playfield extends Sprite {
 
     // Рисование двумерного поля
     private function Draw2d(): void {
-        /*var colors:Array = [0x004400, 0x000088];
-        var alphas:Array = [1, 1];
-        var ratios:Array = [0, 255];
-        var matrix:Matrix = new Matrix();
-        matrix.createGradientBox(this.xSize, this.ySize, Math.PI / 2, 0, 50);
-        this.graphics.beginGradientFill(GradientType.LINEAR, colors, alphas, ratios, matrix);*/
-
         this.graphics.beginFill(this.color);
         this.graphics.lineStyle(fieldThickness, 0);
         this.graphics.drawRect(0, 0, this.xSize, this.ySize);
@@ -121,7 +119,10 @@ public class Playfield extends Sprite {
         CheckEndGame(smallBall, bigBall);
     }
 
-    function CheckEndGame(smallBall: Ball, bigBall: Ball): void {
+    private function CheckEndGame(smallBall: Ball, bigBall: Ball): void {
+        if(smallBall is UserBall || bigBall is UserBall){
+            var a:int =0;
+        }
         // Проверка окончания
         if (smallBall is UserBall) {
             this.GameOver("Вы проиграли! Вас уничтожили!", false);
@@ -153,7 +154,6 @@ public class Playfield extends Sprite {
     // Проверка на пересечение шаров и удаление меньших при пересечении
     private function CheckIntersect(): void
     {
-        //var minRadius: Number = balls[0].radius;
         for (var i:int = 0; i < this.balls.length - 1; i++) {
             for (var j:int = i + 1; j < this.balls.length; j++) {
                 if (this.IsIntersects(this.balls[i], this.balls[j]))
@@ -187,49 +187,16 @@ public class Playfield extends Sprite {
         this.userBallColor = col;
     }
 
-    // Сетка на поле
-    function DrawGrid(): void {
-        // Шаг
-        var step: int = 50;
-
-        for(var i: int = 0; i <= this.SizeX / step; i++ ) {
-            var shape: Shape = new Shape();
-            shape.graphics.lineStyle(1, 0x000000);
-            shape.graphics.moveTo(i*step, 0);
-            shape.graphics.lineTo(i*step, this.SizeY);
-            this.addChild(shape);
-        }
-        for(var i: int = 0; i <= this.SizeY / step; i++ ) {
-            var shape: Shape = new Shape();
-            shape.graphics.lineStyle(1, 0x000000);
-            shape.graphics.moveTo(0, i*step);
-            shape.graphics.lineTo(this.SizeX, i*step);
-            this.addChild(shape);
-        }
-    }
-
-    // Обработка тика для поля
+    // Обработка тика
     public function newTick(e: TimerEvent):void {
-            // Текущее количество прошедших циклов
-            var loops: int = 0;
+        var diff: Number = getTimer() - lastGameTick;
+        lastGameTick = getTimer();
 
-            // Сглаживание разницы реальной позиции и отрисованного элемента
-            var interpolation: Number;
-
-            while (getTimer() > next_game_tick && loops < MAX_DELAY) {
-                // Изменение координат установленное количество раз в секунду
-                for (var i:int = 0; i < balls.length; i++) {
-                    balls[i].ChangeCoordinates();
-                }
-                next_game_tick += TICK_DELAY;
-                loops++;
-                this.CheckIntersect();
-            }
-            interpolation = (getTimer() + TICK_DELAY - next_game_tick) / TICK_DELAY;
-            // Отрисовка в соответствии с текущим FPS
-            for (var j:int = 0; j < balls.length; j++) {
-                balls[j].Move(interpolation);
-            }
+        for (var j:int = 0; j < balls.length; j++) {
+            balls[j].Move(diff/TICK_DELAY);
+           // balls[j].Move();
+            this.CheckIntersect();
+        }
     }
 
     // Добавление шара в массив
@@ -241,11 +208,13 @@ public class Playfield extends Sprite {
             ball.color = userBallColor;
         }
         GetMinRadius();
+
+        this.addChild(ball);
     }
 
     // Получение объекта с компонентами цвета (r, g, b)
     function HexToRGB(value:uint):Object {
-        var rgb:Object = new Object();
+        var rgb:Object = {};
         rgb.r = (value >> 16) & 0xFF;
         rgb.g = (value >> 8) & 0xFF;
         rgb.b = value & 0xFF;
@@ -259,7 +228,7 @@ public class Playfield extends Sprite {
             var enemyHighLimitColor:Object = HexToRGB(this.enemyBallColor2);
 
             // Средняя граница (для сравнения с шаром пользователя)
-            var avgColor:Object = new Object();
+            var avgColor:Object = {};
             avgColor.r = Math.round((enemyHighLimitColor.r - enemyLowLimitColor.r) / 2);
             avgColor.g = Math.round((enemyHighLimitColor.g - enemyLowLimitColor.g) / 2);
             avgColor.b = Math.round((enemyHighLimitColor.b - enemyLowLimitColor.b) / 2);
@@ -304,7 +273,7 @@ public class Playfield extends Sprite {
     }
 
     // Определение доли радиуса
-    function RadiusProportion(radius: Number, smallRadius: Number, bigRadius: Number): Number{
+    private function RadiusProportion(radius: Number, smallRadius: Number, bigRadius: Number): Number{
         if (bigRadius != smallRadius){
             return ((radius - smallRadius) / (bigRadius - smallRadius));
         }
@@ -315,10 +284,10 @@ public class Playfield extends Sprite {
     public function GameOver(alertMessage: String, isWin: Boolean): void
     {
         if(isWin){
-            winSnd.play();
+            workPlace.loader.sounds.winSnd.play();
         }
         else{
-            loseSnd.play();
+            workPlace.loader.sounds.loseSnd.play();
         }
 
         for (var k:int = 0; k < this.balls.length; k++) {
@@ -337,9 +306,14 @@ public class Playfield extends Sprite {
 
     // Очистка поля
     public function ClearField(): void {
-        if (this.numChildren > 0){
+        /*if (this.numChildren > 0){
             this.removeChildren(0, this.numChildren - 1);
+        }*/
+
+        for (var i: int = 0; i < this.balls.length; i++){
+            this.removeChild(balls[i]);
         }
+        this.balls = [];
     }
 
     // Проверяет, пересекаются ли 2 шара (true - да, false - нет)
